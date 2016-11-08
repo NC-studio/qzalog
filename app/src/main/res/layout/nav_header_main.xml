@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:background="@android:color/transparent"
+    android:layout_marginTop="@dimen/nav_header_height"
+    android:gravity="bottom">
+
+    <ImageView
+        android:id="@+id/menuImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/sym_def_app_icon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="База имущества банка"
+        android:layout_toRightOf="@+id/menuImage"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="6dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+</RelativeLayout>
