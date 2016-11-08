@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.models.Category;
@@ -41,6 +42,9 @@ public class CategoryActivity extends AppCompatActivity {
             Integer categoryPosition = extras.getInt("category");
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
             category = categories.get(extras.getInt("category"));
+            ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
+
+
         }
 
         initFragment(savedInstanceState);
