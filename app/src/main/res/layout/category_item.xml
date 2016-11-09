@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:padding="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
+    android:padding="12dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
     android:background="@drawable/category_list_effect"
     android:layout_height="wrap_content">
 
     <ImageView
         android:layout_gravity="center_vertical"
         android:id="@+id/icon"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginRight="6dp"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_category_31"
         android:layout_width="wrap_content"
@@ -19,8 +18,7 @@
 
 
     <TextView
-        android:text="Квартиры"
-
+        android:text="Квартиa"
         android:id="@+id/name"
         android:textAppearance="@style/TextCategories"
         android:layout_width="wrap_content"
@@ -30,8 +28,6 @@
         />
 
     <TextView
-        android:layout_marginRight="6dp"
-        android:text="Квартиры"
         android:layout_alignParentRight="true"
         android:id="@+id/amount"
         android:layout_width="wrap_content"

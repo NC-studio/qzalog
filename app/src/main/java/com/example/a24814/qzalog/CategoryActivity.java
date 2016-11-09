@@ -1,5 +1,6 @@
 package com.example.a24814.qzalog;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,8 @@ public class CategoryActivity extends AppCompatActivity {
 
     private final String TAG = "CategoryActivity";
 
+    private Integer categoryPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,16 +38,12 @@ public class CategoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
-
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            Integer categoryPosition = extras.getInt("category");
+            categoryPosition = extras.getInt("category");
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
-
-
         }
 
         initFragment(savedInstanceState);
@@ -70,9 +69,7 @@ public class CategoryActivity extends AppCompatActivity {
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
             // fragmentTransaction.replace(android.R.id.content, newFragment);
-
             fragmentTransaction.add(R.id.flContent, newFragment);
-
             fragmentTransaction.commit();
 
         }
@@ -83,13 +80,25 @@ public class CategoryActivity extends AppCompatActivity {
 
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.action_search);
-        if(item != null)
+        if(item != null) {
             item.setVisible(true);
-
+        }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
 
+        if (id == R.id.action_search) {
+            Intent intent = new Intent(this, FormActivity.class);
+            intent.putExtra("categoryId", categoryPosition);
+            startActivity(intent);
+            return true;
+        }
 
+        return super.onOptionsItemSelected(item);
     }
 
 }

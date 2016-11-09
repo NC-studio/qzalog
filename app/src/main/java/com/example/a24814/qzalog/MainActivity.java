@@ -10,11 +10,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.example.a24814.qzalog.components.DataBaseHelper;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    private final String TAG = "MainActivity";
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
@@ -27,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Frame view for fragments
     FrameLayout flContent;
 
-    private final Integer activityId = 990101;
+
+    private DataBaseHelper dbHelper;
 
 
     @Override
@@ -49,8 +57,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         initFragment(savedInstanceState);
+
+        //init data base
+        initDataBase();
 
     }
 
@@ -68,10 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.add(R.id.flContent, newFragment);
 
             fragmentTransaction.commit();
-
-
-
-
         }
 
     }
@@ -103,4 +109,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         return false;
     }
+
+    private void initDataBase(){
+        // создаем объект для создания и управления версиями БД
+        dbHelper = new DataBaseHelper(this);
+        try
+        {
+            dbHelper.createDataBase();
+        }
+        catch (IOException mIOException)
+        {
+            Log.e(TAG,  mIOException.getMessage());
+        }
+
+
+        dbHelper.close();
+    }
+
 }

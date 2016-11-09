@@ -9,4 +9,12 @@
         android:visible="false"
         app:showAsAction="ifRoom"
         />
+    <item
+        android:id="@+id/action_cancel"
+        android:orderInCategory="200"
+        android:title="Сбросить"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        />
+
 </menu>

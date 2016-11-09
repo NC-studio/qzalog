@@ -8,6 +8,13 @@
 
 
     <!-- Texts. -->
+    <style name="TextToolbar">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="TextCategories">
         <item name="android:textSize">15dp</item>
         <item name="android:textColor">@android:color/black</item>

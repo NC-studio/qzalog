@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.Backend;
 import com.example.a24814.qzalog.components.BaseFile;
+import com.example.a24814.qzalog.components.DataBaseHelper;
 import com.example.a24814.qzalog.models.Category;
 
 import java.util.List;
@@ -95,14 +96,9 @@ public class CategoryFragment extends Fragment {
             public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
                                     long arg3) {
                 try {
-
-
-
                     Intent intent = new Intent(getActivity(), CategoryActivity.class);
                     intent.putExtra("categoryId", arg2);
                     startActivity(intent);
-
-
                 } catch ( IndexOutOfBoundsException e ) {
                     Log.d(TAG, e.getMessage());
                 }
@@ -164,8 +160,17 @@ public class CategoryFragment extends Fragment {
     }
 
     private void  getCategories(){
+
+        DataBaseHelper myDatabaseHelper = new DataBaseHelper(getActivity());
+        myDatabaseHelper.openDataBase();
+        categories = myDatabaseHelper.getCategories(categories);
+        myDatabaseHelper.close();
+
+
+
+
         //Пока тут
-        categories.add(new Category("Квартиры", null, 31));
+       /* categories.add(new Category("Квартиры", null, 31));
         categories.add(new Category("Дома", null, 25));
         categories.add(new Category("Паркинги и гаражи", null, 32));
         categories.add(new Category("Коммерческая недвижимость", null, 38));
@@ -173,7 +178,7 @@ public class CategoryFragment extends Fragment {
         categories.add(new Category("Земельные участки", null, 33));
         categories.add(new Category("Специальная техника", null, 45));
         categories.add(new Category("Автотранспорт", null, 46));
-        categories.add(new Category("Прочее движимое имущество", null, 47));
+        categories.add(new Category("Прочее движимое имущество", null, 47));*/
 
         Backend.getCategoriesInfo(getActivity(), getActivity(), this);
     }
