@@ -23,6 +23,20 @@
         <item name="android:lineSpacingExtra">10dp</item>
     </style>
 
+    <style name="TextForm">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextFormMini">
+        <item name="android:textColor">@color/darkGrey</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 
     <style name="TextTitle">
         <item name="android:textSize">12dp</item>

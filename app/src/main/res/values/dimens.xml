@@ -5,4 +5,12 @@
     <dimen name="nav_header_height">40dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+
+    <dimen name="default_padding">8dp</dimen>
+
+    <dimen name="form_padding_input">15dp</dimen>
+    <dimen name="form_padding_top">16dp</dimen>
+    <dimen name="form_padding_bottom">3dp</dimen>
+
+
 </resources>

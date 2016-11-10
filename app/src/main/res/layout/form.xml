@@ -4,29 +4,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <FrameLayout
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/form_padding_top"
+        android:paddingBottom="@dimen/form_padding_bottom"
+        android:background="@drawable/border_bottom_grey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="РЕГИОН:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextFormMini"/>
+    </FrameLayout>
+
     <FrameLayout
         android:id="@+id/regionSpinner"
         android:background="@drawable/border_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <RelativeLayout
-            android:padding="8dp"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingTop="@dimen/form_padding_input"
+            android:paddingBottom="@dimen/form_padding_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
                 <TextView
-                    android:textColor="@color/black"
-                    android:text="Регион"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_toLeftOf="@+id/rightSpinnerIcon"
-                    android:textColor="@color/black"
+                    android:textColor="@color/appBlue"
                     android:text="Алматы"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextForm"/>
                 <ImageView
+                    android:src="@drawable/ic_form_array_xxxhdpi"
                     android:id="@+id/rightSpinnerIcon"
                     android:layout_alignParentRight="true"
                     android:layout_width="20dp"
