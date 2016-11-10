@@ -2,6 +2,7 @@
 <resources>
     <color name="appBlue">#006790</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="grey">#e7e6e6</color>
 
 

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.a24814.qzalog.models.Category;
+import com.example.a24814.qzalog.models.Region;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
     private static String DB_NAME ="qzalog.db";
     private SQLiteDatabase mDataBase;
     private final Context mContext;
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
     private static boolean mDataBaseExist;
 
     public DataBaseHelper(Context context)
@@ -148,4 +149,52 @@ public class DataBaseHelper extends SQLiteOpenHelper
 
         return categories;
     }
+
+    public List<Region> getRegions(List<Region> regions, Integer parent){
+        final String TABLE_NAME = "regions";
+        String selectQuery;
+        if(parent == null)
+            selectQuery = "SELECT  * FROM " + TABLE_NAME + " WHERE parent is null ORDER BY position asc";
+        else
+            selectQuery = "SELECT  * FROM " + TABLE_NAME + " WHERE parent = " + parent + "  ORDER BY position asc";
+
+        SQLiteDatabase db  = this.getReadableDatabase();
+        Cursor cursor      = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                regions.add(
+                        new Region(
+                                cursor.getInt(cursor.getColumnIndex("id")),
+                                cursor.getString(cursor.getColumnIndex("name")),
+                                cursor.getInt(cursor.getColumnIndex("position")),
+                                cursor.getInt(cursor.getColumnIndex("parent")))
+                );
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return regions;
+    }
+
+    public Boolean  checkChildren(List<Region> regions, Integer parent){
+        final String TABLE_NAME = "regions";
+        String selectQuery;
+        selectQuery = "SELECT  COUNT(*) as amount FROM " + TABLE_NAME + " WHERE parent = " + parent;
+
+        SQLiteDatabase db  = this.getReadableDatabase();
+        Cursor cursor      = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        Integer amount = cursor.getInt(cursor.getColumnIndex("amount"));
+
+        cursor.close();
+        if(amount > 0){
+            return true;
+        }
+        return false;
+
+
+    }
+
+
+
 }

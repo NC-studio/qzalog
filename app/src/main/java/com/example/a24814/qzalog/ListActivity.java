@@ -1,5 +1,7 @@
 package com.example.a24814.qzalog;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,22 +14,18 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.a24814.qzalog.components.BaseFile;
-import com.example.a24814.qzalog.models.Category;
+public class ListActivity extends AppCompatActivity {
 
-import java.util.List;
+    private Integer parent;
+    private final String TAG = "CategoryActivity";
 
-public class FormActivity extends AppCompatActivity {
+    public static Integer numberOfPage = 1;
 
-    Category category;
-
-    private final String TAG = "FormActivity";
-
-    private Integer categoryPosition;
+    private Context _context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        _context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -36,14 +34,14 @@ public class FormActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        ((TextView)toolbar.findViewById(R.id.toolbar_title)).setText("Выбор региона");
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            categoryPosition = extras.getInt("category");
-            List<Category> categories = ((BaseFile) getApplication()).getCategories();
-            category = categories.get(extras.getInt("category"));
-            ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
+            numberOfPage = extras.getInt("numberOfPage") + 1;
+
+        }else{
+            numberOfPage = 1;
         }
 
         initFragment(savedInstanceState);
@@ -52,16 +50,22 @@ public class FormActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(numberOfPage == 2){
+                    Intent intent = new Intent(_context, ListActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
                 finish();
             }
         });
-
     }
 
     private void initFragment(Bundle savedInstanceState){
         FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
+
         if (savedInstanceState == null) {
-            Fragment newFragment = new FormFragment();
+
+            Fragment newFragment = new RegionFragment();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
@@ -69,32 +73,32 @@ public class FormActivity extends AppCompatActivity {
             // fragmentTransaction.replace(android.R.id.content, newFragment);
             fragmentTransaction.add(R.id.flContent, newFragment);
             fragmentTransaction.commit();
+
         }
 
     }
-
-
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.action_cancel);
-        if(item != null) {
-            item.setVisible(true);
-        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-
-        if (id == R.id.action_cancel) {
-
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+
+        if(numberOfPage == 2){
+            Intent intent = new Intent(this, ListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
+        }
+
+        finish();
+    }
+
+
 }

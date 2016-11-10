@@ -166,9 +166,6 @@ public class CategoryFragment extends Fragment {
         categories = myDatabaseHelper.getCategories(categories);
         myDatabaseHelper.close();
 
-
-
-
         //Пока тут
        /* categories.add(new Category("Квартиры", null, 31));
         categories.add(new Category("Дома", null, 25));

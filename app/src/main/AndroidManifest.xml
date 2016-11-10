@@ -23,7 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CategoryActivity" />
-        <activity android:name=".FormActivity"></activity>
+        <activity android:name=".FormActivity" />
+        <activity android:name=".ListActivity"></activity>
     </application>
 
 </manifest>
