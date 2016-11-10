@@ -81,6 +81,7 @@ public class FormActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.action_cancel);
         if(item != null) {
             item.setVisible(true);
+            //item.setActionView(R.layout.toolbar_textview);
         }
         return true;
     }

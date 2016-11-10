@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
-import com.example.a24814.qzalog.components.DataBaseHelper;
+import com.example.a24814.qzalog.components.DataBaseAdapter;
 import com.example.a24814.qzalog.models.Region;
 
 import org.json.JSONException;
@@ -81,7 +81,7 @@ public class RegionFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
                                     long arg3) {
-                getActivity().finish();
+
                 try {
                     if(arg2 != 0){
                         Intent intent = new Intent(getActivity(), ListActivity.class);
@@ -107,9 +107,12 @@ public class RegionFragment extends Fragment {
                             getActivity().startActivity(intent);
                             getActivity().finish();
                         }
-
-
-
+                    }else{
+                        if(((ListActivity) getActivity()).numberOfPage == 1){
+                            formRegion = new JSONObject();
+                            ((BaseFile) getActivity().getApplication()).setFormRegion(formRegion);
+                        }
+                        getActivity().finish();
                     }
 
                 } catch ( IndexOutOfBoundsException e ) {
@@ -163,10 +166,7 @@ public class RegionFragment extends Fragment {
 
     private void  getRegions(JSONObject formRegion){
 
-
-
-        DataBaseHelper myDatabaseHelper = new DataBaseHelper(getActivity());
-        myDatabaseHelper.openDataBase();
+        DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(getActivity(), true);
         Integer parent = null;
         try {
             parent = formRegion.getInt("parent");
@@ -181,9 +181,7 @@ public class RegionFragment extends Fragment {
 
 
         private Boolean  checkChildren(Integer objectId){
-            DataBaseHelper myDatabaseHelper = new DataBaseHelper(getActivity());
-            myDatabaseHelper.openDataBase();
-
+            DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(getActivity(), true);
 
             Boolean check = myDatabaseHelper.checkChildren(regions, objectId);
 

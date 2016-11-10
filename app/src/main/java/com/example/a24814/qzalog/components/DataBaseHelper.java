@@ -1,21 +1,16 @@
 package com.example.a24814.qzalog.components;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import com.example.a24814.qzalog.models.Category;
-import com.example.a24814.qzalog.models.Region;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 
 public class DataBaseHelper extends SQLiteOpenHelper
@@ -26,13 +21,14 @@ public class DataBaseHelper extends SQLiteOpenHelper
     private static String DB_NAME ="qzalog.db";
     private SQLiteDatabase mDataBase;
     private final Context mContext;
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 15;
     private static boolean mDataBaseExist;
 
-    public DataBaseHelper(Context context)
+    public DataBaseHelper(Context context, Boolean inited)
     {
         super(context, DB_NAME, null, DATABASE_VERSION);
         this.mContext = context;
+
         if(android.os.Build.VERSION.SDK_INT >= 17){
             DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
         }
@@ -40,15 +36,42 @@ public class DataBaseHelper extends SQLiteOpenHelper
         {
             DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
         }
+
+        if(inited == true){
+            mDataBaseExist = true;
+        }else{
+            mDataBaseExist = checkDataBase();
+        }
+
+        if (mDataBaseExist) {
+            openDataBase();
+        } else {
+            try
+            {
+                createDataBase();
+            }
+            catch (IOException mIOException)
+            {
+                Log.e(TAG, mIOException.toString() + "  UnableToCreateDatabase");
+                throw new Error("UnableToCreateDatabase");
+            }
+        }
+
     }
+
+
 
 
 
     public void createDataBase() throws IOException
     {
-        mDataBaseExist = checkDataBase();
-        this.getReadableDatabase();
-        this.close();
+        copyDataBase();
+        /*mDataBaseExist = checkDataBase();
+        if(!mDataBaseExist) {
+            copyDataBase();
+            Log.e(TAG, "createDatabase database created");
+        }*/
+
     }
 
     //Check that the database exists here: /data/data/your package/databases/Da Name
@@ -80,8 +103,8 @@ public class DataBaseHelper extends SQLiteOpenHelper
     public boolean openDataBase() throws SQLException
     {
         String mPath = DB_PATH + DB_NAME;
-        Log.v(TAG, "openDataBase" + mPath);
-        mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+        mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.OPEN_READWRITE);
+
         //mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
         return mDataBase != null;
     }
@@ -89,6 +112,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
     @Override
     public synchronized void close()
     {
+        Log.d(TAG, "closed");
         if(mDataBase != null)
             mDataBase.close();
         super.close();
@@ -97,17 +121,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "onCreate");
-        try
-        {
-            if(!mDataBaseExist) {
-                copyDataBase();
-                Log.e(TAG, "createDatabase database created");
-            }
-        }
-        catch (IOException mIOException)
-        {
-            Log.e(TAG,  mIOException.getMessage());
-        }
+
     }
 
     @Override
@@ -118,6 +132,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
             if(mDataBaseExist) {
                 File dbFile = new File(DB_PATH + DB_NAME);
                 dbFile.delete();
+                Log.d(TAG, "onUpgrade Deleted");
             }
             copyDataBase();
         }
@@ -127,73 +142,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
         }
     }
 
-    public List<Category> getCategories(List<Category> categories){
-        final String TABLE_NAME = "categories";
 
-        String selectQuery = "SELECT  * FROM " + TABLE_NAME;
-        SQLiteDatabase db  = this.getReadableDatabase();
-        Cursor cursor      = db.rawQuery(selectQuery, null);
-
-
-        if (cursor.moveToFirst()) {
-            do {
-                categories.add(
-                        new Category(
-                                cursor.getString(cursor.getColumnIndex("name")),
-                                null,
-                                cursor.getInt(cursor.getColumnIndex("category_id")))
-                );
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-        return categories;
-    }
-
-    public List<Region> getRegions(List<Region> regions, Integer parent){
-        final String TABLE_NAME = "regions";
-        String selectQuery;
-        if(parent == null)
-            selectQuery = "SELECT  * FROM " + TABLE_NAME + " WHERE parent is null ORDER BY position asc";
-        else
-            selectQuery = "SELECT  * FROM " + TABLE_NAME + " WHERE parent = " + parent + "  ORDER BY position asc";
-
-        SQLiteDatabase db  = this.getReadableDatabase();
-        Cursor cursor      = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                regions.add(
-                        new Region(
-                                cursor.getInt(cursor.getColumnIndex("id")),
-                                cursor.getString(cursor.getColumnIndex("name")),
-                                cursor.getInt(cursor.getColumnIndex("position")),
-                                cursor.getInt(cursor.getColumnIndex("parent")))
-                );
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-        return regions;
-    }
-
-    public Boolean  checkChildren(List<Region> regions, Integer parent){
-        final String TABLE_NAME = "regions";
-        String selectQuery;
-        selectQuery = "SELECT  COUNT(*) as amount FROM " + TABLE_NAME + " WHERE parent = " + parent;
-
-        SQLiteDatabase db  = this.getReadableDatabase();
-        Cursor cursor      = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        Integer amount = cursor.getInt(cursor.getColumnIndex("amount"));
-
-        cursor.close();
-        if(amount > 0){
-            return true;
-        }
-        return false;
-
-
-    }
 
 
 

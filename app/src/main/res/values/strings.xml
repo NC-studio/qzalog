@@ -4,6 +4,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <string name="form_default">Не важно</string>
+
 
     <string name="country_prompt">Choose a country</string>
     <string-array name="country_arrays">

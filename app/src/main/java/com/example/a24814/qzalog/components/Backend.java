@@ -60,9 +60,9 @@ public class Backend {
             {
                 super.handleResponse( success );
 
-                if(success == false){
-                    Helpers.showToast(context, "Сервис недоступен. Проверьте соеденение с интернетом");
-                }
+                //if(success == false){
+                  //  Helpers.showToast(context, "Сервис недоступен. Проверьте соеденение с интернетом");
+               // }
 
                 fragment.backendResponse();
 
