@@ -10,6 +10,8 @@
 
 
 
+
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
@@ -18,5 +20,11 @@
     <color name="topBgColor">#397dc8</color>
     <color name="centerBgColor">#13b8be</color>
     <color name="bottomBgColor">#3684d6</color>
+
+    <color name="inputBackground">#f8f8f8</color>
+    <color name="inputBorder">#c3c3c3</color>
+
+
+
 
 </resources>

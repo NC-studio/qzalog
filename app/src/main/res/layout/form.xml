@@ -48,12 +48,77 @@
         </RelativeLayout>
     </FrameLayout>
 
-    <Spinner
-        android:spinnerMode="dropdown"
-        android:id="@+id/spinner1"
+    <FrameLayout
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/form_padding_top"
+        android:paddingBottom="@dimen/form_padding_bottom"
+        android:background="@drawable/border_bottom_grey"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/country_arrays"
-        android:prompt="@string/country_prompt" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:textAllCaps="true"
+            android:text="Цена:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextFormMini"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/costFrame"
+        android:background="@drawable/border_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingTop="@dimen/form_padding_input_edit"
+            android:paddingBottom="@dimen/form_padding_input_edit_bottom"
+            android:layout_width="match_parent"
+            android:weightSum="20"
+            android:layout_height="wrap_content">
+            <EditText
+                android:textCursorDrawable="@null"
+                android:paddingRight="8dip"
+                android:paddingLeft="8dip"
+                android:paddingTop="4dip"
+                android:paddingBottom="4dip"
+                android:background="@drawable/border_input"
+                android:hint="от"
+                android:layout_weight="8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginRight="6dp"
+                android:layout_marginLeft="6dp"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:text="\u2014"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:textCursorDrawable="@null"
+                android:paddingRight="8dip"
+                android:paddingLeft="8dip"
+                android:paddingTop="4dip"
+                android:paddingBottom="4dip"
+                android:background="@drawable/border_input"
+                android:hint="до"
+                android:layout_weight="8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginLeft="6dp"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:text="тг"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

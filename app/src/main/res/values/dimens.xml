@@ -12,5 +12,9 @@
     <dimen name="form_padding_top">16dp</dimen>
     <dimen name="form_padding_bottom">3dp</dimen>
 
+    <dimen name="form_padding_input_edit">10dp</dimen>
+    <dimen name="form_padding_input_edit_bottom">11dp</dimen>
+
+
 
 </resources>
