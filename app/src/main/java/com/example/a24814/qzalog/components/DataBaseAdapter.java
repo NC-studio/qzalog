@@ -4,9 +4,12 @@ package com.example.a24814.qzalog.components;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.a24814.qzalog.models.Category;
 import com.example.a24814.qzalog.models.Region;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -104,6 +107,27 @@ public class DataBaseAdapter {
 
 
     }
+
+    public JSONObject getForm(Integer category_id){
+        final String TABLE_NAME = "categories";
+
+        String selectQuery = "SELECT  form FROM " + TABLE_NAME + " WHERE category_id = " + category_id;
+        SQLiteDatabase db  = mDbHelper.getReadableDatabase();
+        Cursor cursor      = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            String jsonString = cursor.getString(cursor.getColumnIndex("form"));
+            try {
+                JSONObject obj = new JSONObject(jsonString);
+                return obj;
+            } catch (Throwable t) {
+                Log.d(TAG, t.getMessage());
+            }
+        }
+        cursor.close();
+        return null;
+    }
+
 
 
 }

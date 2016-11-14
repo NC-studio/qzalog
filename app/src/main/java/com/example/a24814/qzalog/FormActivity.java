@@ -13,7 +13,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
+import com.example.a24814.qzalog.components.DataBaseAdapter;
 import com.example.a24814.qzalog.models.Category;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -24,6 +27,8 @@ public class FormActivity extends AppCompatActivity {
     private final String TAG = "FormActivity";
 
     private Integer categoryPosition;
+
+    private JSONObject formObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,13 @@ public class FormActivity extends AppCompatActivity {
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
         }
+
+
+        //dynamic
+        DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(this, true);
+        formObject = myDatabaseHelper.getForm(category.getObjectId());
+        myDatabaseHelper.close();
+
 
         initFragment(savedInstanceState);
 
@@ -97,5 +109,9 @@ public class FormActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public JSONObject getForm(){
+        return formObject;
     }
 }
