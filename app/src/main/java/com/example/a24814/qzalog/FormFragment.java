@@ -47,7 +47,6 @@ public class FormFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-
     private void initView(){
         regionSpinner = (FrameLayout) view.findViewById(R.id.regionSpinner);
         regionSpinner.setOnClickListener(new View.OnClickListener() {
