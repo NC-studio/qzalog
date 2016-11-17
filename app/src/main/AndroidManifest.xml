@@ -23,7 +23,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".CategoryActivity" />
-        <activity android:name=".FormActivity" />
+        <activity
+            android:name=".FormActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+
+
         <activity android:name=".ListActivity"></activity>
     </application>
 

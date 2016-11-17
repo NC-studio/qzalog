@@ -16,5 +16,10 @@
     <dimen name="form_padding_input_edit_bottom">11dp</dimen>
 
 
+    <dimen name="form_padding_spinner_top">6dp</dimen>
+    <dimen name="form_padding_spinner_bottom">6dp</dimen>
+    <dimen name="form_padding_spinner_tv_top">8dp</dimen>
+    <dimen name="form_padding_spinner_tv_bottom">8dp</dimen>
+
 
 </resources>

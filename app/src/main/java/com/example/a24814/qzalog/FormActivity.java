@@ -15,9 +15,11 @@ import android.widget.TextView;
 import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.components.DataBaseAdapter;
 import com.example.a24814.qzalog.models.Category;
+import com.example.a24814.qzalog.models.Form;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FormActivity extends AppCompatActivity {
@@ -29,6 +31,10 @@ public class FormActivity extends AppCompatActivity {
     private Integer categoryPosition;
 
     private JSONObject formObject;
+
+    private Integer previusCategory;
+
+    private List<Form> fields = new ArrayList<Form>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +55,23 @@ public class FormActivity extends AppCompatActivity {
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
-        }
 
+
+            previusCategory = ((BaseFile) getApplication()).getCategoryId();
+            if(previusCategory == null || previusCategory != extras.getInt("category")){
+                previusCategory =  extras.getInt("category");
+                ((BaseFile) getApplication()).setCategoryId( previusCategory);
+
+            }else{
+                fields = ((BaseFile) getApplication()).getFields();
+            }
+
+        }
 
         //dynamic
         DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(this, true);
         formObject = myDatabaseHelper.getForm(category.getObjectId());
         myDatabaseHelper.close();
-
 
         initFragment(savedInstanceState);
 
@@ -102,9 +117,7 @@ public class FormActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-
         if (id == R.id.action_cancel) {
-
             return true;
         }
 
@@ -113,5 +126,13 @@ public class FormActivity extends AppCompatActivity {
 
     public JSONObject getForm(){
         return formObject;
+    }
+
+    public Integer getCategoryId(){
+        return category.getObjectId();
+    }
+
+    public List<Form> getFields() {
+        return fields;
     }
 }

@@ -8,9 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
+import com.example.a24814.qzalog.components.Defaults;
+import com.example.a24814.qzalog.components.FromCreator;
 import com.example.a24814.qzalog.models.Form;
 
 import org.json.JSONException;
@@ -27,12 +31,17 @@ public class FormFragment extends Fragment {
 
     private FrameLayout regionSpinner;
 
+    private String regionId;
+
     private View view;
 
     private JSONObject formObject;
 
     private List<Form> fields = new ArrayList<Form>();
 
+    private LinearLayout formFields;
+
+    private RelativeLayout searchFooter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +49,16 @@ public class FormFragment extends Fragment {
         view = inflater.inflate(R.layout.form,
                 container, false);
         initView();
+
+        fields = ((FormActivity)getActivity()).getFields();
+
+        if(fields.size() > 0){
+            parseSavedList();
+            Log.d("test", "test123");
+        }else{
+            parseJson();
+        }
+
         return view;
     }
 
@@ -48,6 +67,7 @@ public class FormFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
     private void initView(){
+        formFields = (LinearLayout)   view.findViewById(R.id.formFields);
         regionSpinner = (FrameLayout) view.findViewById(R.id.regionSpinner);
         regionSpinner.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -55,20 +75,56 @@ public class FormFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        searchFooter = (RelativeLayout) view.findViewById(R.id.searchFooter);
+        searchFooter.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                String request = generateUrlRequest();
+                Log.d("test request", request);
+            }
+        });
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        JSONObject formRegion = ((BaseFile) getActivity().getApplication()).getFormRegion();
+        try {
+            String regionIdValue = formRegion.getString("id");
+            if(regionIdValue != null){
+                regionId = regionIdValue;
+            }
+            String regionName = formRegion.getString("name");
+            if(regionName != null){
+                ((TextView) view.findViewById(R.id.regionText)).setText(regionName);
+            }else{
+                ((TextView) view.findViewById(R.id.regionText)).setText(getResources().getString(R.string.form_default));
+            }
+        }catch (JSONException e){
+            Log.d(TAG, e.getMessage());
+        }
+
+
+
+
+    }
+
+    /**
+     * Get JsonObject from DB and parse it separate components (fields)
+     * Save fields to list (fields)
+     * Add view of each field to Form View
+     */
+    private void parseJson(){
         formObject = ((FormActivity)getActivity()).getForm();
-
-        Log.d("123", formObject.toString());
-
         try {
             JSONObject jObject = formObject.getJSONObject("fields");
-
-            Log.d("123", jObject.toString());
 
             Iterator<String> iter = jObject.keys();
             while (iter.hasNext()) {
                 String key = iter.next();
                 try {
+                    /**
+                     * Generating Form object from json Object
+                     */
                     JSONObject value = jObject.getJSONObject(key);
                     Integer id = Integer.valueOf(key);
                     String unit_of_measure = value.getString("unit_of_measure");
@@ -84,38 +140,39 @@ public class FormFragment extends Fragment {
                     }
                     Form field = new Form(id, title, name, name2, unit_of_measure, placeholder, type, main, jsonList);
                     fields.add(field);
-
+                    FromCreator fromCreator = new FromCreator(getActivity(), field);
+                    View v = fromCreator.createField();
+                    formFields.addView(v);
                 } catch (JSONException e) {
                     Log.d(TAG, e.toString());
                 }
             }
+            ((BaseFile) getActivity().getApplication()).setFields(fields);
         }catch (Throwable t) {
             Log.d(TAG, t.getMessage());
         }
-
-
-
-
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();  // Always call the superclass method first
-        JSONObject formRegion = ((BaseFile) getActivity().getApplication()).getFormRegion();
-        try {
-            String value = formRegion.getString("name");
-            if(value != null){
-                ((TextView) view.findViewById(R.id.regionText)).setText(value);
-            }else{
-                ((TextView) view.findViewById(R.id.regionText)).setText(getResources().getString(R.string.form_default));
-            }
-        }catch (JSONException e){
-            Log.d(TAG, e.getMessage());
+    private void parseSavedList(){
+        for (Form field : fields)
+        {
+            FromCreator fromCreator = new FromCreator(getActivity(), field);
+            View v = fromCreator.createField();
+            formFields.addView(v);
         }
     }
 
+    private String generateUrlRequest(){
+        String url = Defaults.CATEGORY_PATH;
 
+        Integer category_id = ((FormActivity)getActivity()).getCategoryId();
+        url = url + "?category="+String.valueOf(category_id);
+        if(regionId != null){
+            url = url + "&ObjectsSearch[region_id]=" + regionId;
+        }
 
+        return url;
+    }
 
 
 }

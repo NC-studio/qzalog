@@ -57,5 +57,42 @@
     </style>
 
 
+    <style name="listPrice">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingExtra">10dp</item>
+    </style>
+
+    <style name="ObjectTitle">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@android:color/black</item>
+
+
+        <item name="android:lineSpacingExtra">10dp</item>
+    </style>
+
+    <style name="ObjectAddress">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">sans-serif</item>
+
+        <item name="android:lineSpacingExtra">6dp</item>
+    </style>
+
+    <style name="additionalInfo">
+        <item name="android:textSize">13dp</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:fontFamily">sans-serif</item>
+
+        <item name="android:lineSpacingExtra">10dp</item>
+    </style>
+
+
+
+
+
+
 
 </resources>

@@ -70,6 +70,26 @@ public class Backend {
         }.execute();
     }
 
+    public static void getObjects(final Context context, String url) {
+
+        new BackendCallback<Boolean>(context, false){
+            @Override
+            public String doInBackground(Void... params )
+            {
+
+                return null;
+            }
+            @Override
+            public void handleResponse( Boolean success )
+            {
+                super.handleResponse( success );
+
+
+
+            }
+        }.execute();
+    }
+
 
 
 }
