@@ -3,23 +3,23 @@ package com.example.a24814.qzalog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.a24814.qzalog.components.Backend;
 import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.models.Objects;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,6 +28,8 @@ import java.util.List;
 public class CategoryObjectsFragment extends Fragment {
 
     private final String TAG = "CategoryObjects Fragment";
+
+    private CategoryObjectsFragment fragment;
 
     private List<Objects> objects;
 
@@ -43,9 +45,20 @@ public class CategoryObjectsFragment extends Fragment {
 
     private DisplayImageOptions options;
 
+    private Boolean isLoading = false;
+
+    private Boolean isUploaded = false;
+
+    private Boolean pauseLoading = false;
+
+    private String urlRequest;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        fragment = this;
         view = inflater.inflate(R.layout.objects_list,
                 container, false);
 
@@ -55,48 +68,35 @@ public class CategoryObjectsFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
 
-        initImageLoader();
-
+        urlRequest = ((BaseFile) getActivity().getApplication()).getUrl();
+        objects = ((BaseFile) getActivity().getApplication()).getObjects();
         initAdapter();
-
     }
 
+
+
     private void initView(){
+
         objectsList = (ListView) view.findViewById(R.id.objectsList);
         final LayoutInflater factory = getActivity().getLayoutInflater();
         loadingFooter = factory.inflate(R.layout.list_loader, null);
+        objectsList.addFooterView(loadingFooter);
+
     }
 
 
-    private void initImageLoader(){
-        // UNIVERSAL IMAGE LOADER SETUP
-        options = new DisplayImageOptions.Builder()
-                .cacheOnDisc(true).cacheInMemory(true)
-                //.showImageForEmptyUri(R.drawable.avatar)
-                //.showImageOnFail(R.drawable.avatar)
-                //.showImageOnLoading(R.drawable.photo_24dip_xxxhdpi)
-                .imageScaleType(ImageScaleType.EXACTLY).displayer(new FadeInBitmapDisplayer(300)).build();
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(options).memoryCache(new WeakMemoryCache())
-                .discCacheSize(100 * 1024 * 1024).build();
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(config);
-    }
 
     private void initAdapter(){
-        objects = ((BaseFile) getActivity().getApplication()).getObjects();
-        objects.add(new Objects(1, "asda", "http://qzalog.kz/uploads/objects/344669/thumbnails/DQVFWIrJ6HIgfK1W1v4dGjCWRJoJ05LB.jpg"));
-        objects.add(new Objects(1, "asda2", "http://qzalog.kz/uploads/objects/302174/thumbnails/hxX291BjE7HyeuS0Mta9SSE0Tz8HCiE4.jpg"));
-        objects.add(new Objects(1, "asda3", "http://qzalog.kz/uploads/objects/42442662/thumbnails/eYcH35pMt5Ka9OTx8YYRZDZepbq6R8Jr.JPG"));
+
+
 
         adapter = new ObjectAdapter(getActivity(), R.layout.objects_list_item, objects);
         objectsList.setAdapter(adapter);
-        // categoryList.addFooterView(loadingFooter);
 
+        objectsList.setOnScrollListener(new SampleScrollListener(getActivity()));
         objectsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
@@ -105,11 +105,56 @@ public class CategoryObjectsFragment extends Fragment {
             }
         });
 
+        isLoading = true;
+        Backend.getObjects(getActivity(), fragment, urlRequest);
+
     }
+
+    public class SampleScrollListener implements AbsListView.OnScrollListener {
+        private final Context context;
+        private final Object scrollTag = new Object(); // this can be static or not, depending what u want to achieve
+
+        public SampleScrollListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            final Picasso picasso = Picasso.with(context);
+            if (scrollState == SCROLL_STATE_IDLE || scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                picasso.resumeTag(scrollTag);
+            } else {
+                picasso.pauseTag(scrollTag);
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                             int totalItemCount) {
+            int lastInScreen = firstVisibleItem + visibleItemCount;
+            if (lastInScreen == totalItemCount) {
+                if(isUploaded == false && isLoading==false) {
+
+                    loadingFooter.setVisibility(View.VISIBLE);
+                    isLoading = true;
+                    Backend.getObjects(getActivity(), fragment, urlRequest);
+                }
+            }
+        }
+    }
+
+
 
     private static class ViewHolder {
         TextView title;
         ImageView img;
+        ProgressBar progress;
+
+        TextView region;
+        TextView price;
+        TextView discount;
+        TextView info;
+
 
     }
 
@@ -131,7 +176,6 @@ public class CategoryObjectsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent)
         {
             final ViewHolder holder;
-            int listViewItemType = getItemViewType(position);
 
             if (convertView == null) {
                 holder = new ViewHolder();
@@ -139,6 +183,12 @@ public class CategoryObjectsFragment extends Fragment {
 
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.img = (ImageView) convertView.findViewById(R.id.objectImage);
+                holder.progress = (ProgressBar)  convertView.findViewById(R.id.progress);
+
+                holder.region = (TextView) convertView.findViewById(R.id.address);
+                holder.price = (TextView) convertView.findViewById(R.id.price);
+                holder.info = (TextView) convertView.findViewById(R.id.additionalInfo);
+
 
                 convertView.setTag(holder);
             }else {
@@ -150,21 +200,50 @@ public class CategoryObjectsFragment extends Fragment {
             String image_url = object.getImgUrl();
 
             if (holder.img.getTag() == null || !holder.img.getTag().equals(image_url)) {
+                holder.progress.setVisibility(View.VISIBLE);
                 Picasso.with(getActivity())
                         .load(object.getImgUrl())
-                        .into(holder.img);
+                        .into(holder.img, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.progress.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
                 holder.img.setTag(image_url);
             }
+            holder.title.setText(object.getName());
+            holder.region.setText(object.getRegion());
+            holder.price.setText(object.getPrice());
+            holder.info.setText(object.getInfo());
 
 
 
 
-
-           // holder.title.setText(object.getName());
 
 
             return convertView;
         }
+    }
+
+    public void backendResponse(Boolean isUploaded){
+
+
+        loadingFooter.setVisibility(View.GONE);
+
+
+        this.isUploaded = isUploaded;
+        isLoading = false;
+        objects = ((BaseFile) getActivity().getApplication()).getObjects();
+
+        Log.d("test  backendResponse",objects.toString());
+
+
+        adapter.notifyDataSetChanged();
     }
 
 

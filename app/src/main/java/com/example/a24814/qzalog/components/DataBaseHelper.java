@@ -21,7 +21,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
     private static String DB_NAME ="qzalog.db";
     private SQLiteDatabase mDataBase;
     private final Context mContext;
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 50;
     private static boolean mDataBaseExist;
 
     public DataBaseHelper(Context context, Boolean inited)

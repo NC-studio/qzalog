@@ -19,7 +19,7 @@ public class BackendCallback<T> extends BackendAsynh<T>{
     public BackendCallback( Context context, String message )
     {
         this.context = context;
-        progressDialog = ProgressDialog.show( context, "", message, true );
+progressDialog = ProgressDialog.show( context, "", message, true );
 
     }
 
@@ -35,7 +35,8 @@ public class BackendCallback<T> extends BackendAsynh<T>{
     public void handleResponse( T response )
     {
         try{
-            progressDialog.cancel();
+            if(progressDialog != null)
+                progressDialog.cancel();
         }catch (Exception e) {
             e.printStackTrace();
         }

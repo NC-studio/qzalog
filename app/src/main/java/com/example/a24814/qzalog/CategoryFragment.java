@@ -37,6 +37,8 @@ public class CategoryFragment extends Fragment {
     private ArrayAdapter<Category> adapter;
 
 
+
+
    // private ImageLoader imageLoader;
 
    // private DisplayImageOptions options;
@@ -55,6 +57,8 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
 
        // initImageLoader();
         initAdapter();

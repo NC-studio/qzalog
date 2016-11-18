@@ -6,7 +6,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.a24814.qzalog.CategoryFragment;
+import com.example.a24814.qzalog.CategoryObjectsFragment;
 import com.example.a24814.qzalog.models.Category;
+import com.example.a24814.qzalog.models.Objects;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +32,7 @@ public class Backend {
                     try {
                         JSONObject jsonObj = new JSONObject(jsonResponse);
                         // Getting JSON Array node
+                        Log.d("test", jsonObj.toString());
                         JSONArray categories = jsonObj.getJSONArray("categories");
                         for (int i = 0; i < categories.length(); i++) {
                             JSONObject c = categories.getJSONObject(i);
@@ -70,25 +73,76 @@ public class Backend {
         }.execute();
     }
 
-    public static void getObjects(final Context context, String url) {
+    public static void getObjects(final Activity activity, final CategoryObjectsFragment fragment, final String url) {
 
-        new BackendCallback<Boolean>(context, false){
+        new BackendCallback<Boolean>(activity, false){
             @Override
             public String doInBackground(Void... params )
             {
+                setValue(false);
+                Integer page = ((BaseFile) activity.getApplication()).getPage();
+                String jsonResponse = Helpers.getStringByUrl(url + "&page=" + String.valueOf(page));
+
+                Log.d("test", url);
+                Log.d("test", jsonResponse);
+
+                if(jsonResponse != null){
+                    List<Objects> objects = ((BaseFile) activity.getApplication()).getObjects();
+                    try {
+                        JSONObject jsonObj = new JSONObject(jsonResponse);
+
+                        // Getting JSON Array node
+                        JSONArray objectsArray = jsonObj.getJSONArray("objects");
+                        for (int i = 0; i < objectsArray.length(); i++) {
+                            JSONObject c = objectsArray.getJSONObject(i);
+                            Integer id = c.getInt("id");
+                            String title = c.getString("title");
+                            String image = c.getString("image");
+                            String region = c.getString("region");
+                            String price = c.getString("price");
+                            String discount = c.getString("discount");
+                            String info = c.getString("info");
+
+
+
+                            Objects obj = new Objects(id, title, image, region, price, discount, info);
+                            objects.add(obj);
+
+                        }
+                        if(objectsArray.length() < 10){
+                               setValue(true);
+                        }
+
+
+
+
+                    } catch (final JSONException e) {
+                        setValue(false);
+                        setValue(true);
+                        Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
+                    }
+
+                    ((BaseFile) activity.getApplication()).setObjects(objects);;
+                    ((BaseFile) activity.getApplication()).setPage(page + 1);
+
+                }
+
 
                 return null;
             }
             @Override
             public void handleResponse( Boolean success )
             {
-                super.handleResponse( success );
 
+                super.handleResponse( success );
+                fragment.backendResponse(success);
 
 
             }
         }.execute();
     }
+
+
 
 
 

@@ -8,7 +8,6 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -52,20 +51,8 @@ public class Helpers {
 
     }
 
-    public static void selectSpinnerValue(Spinner spinner, String myString)
-    {
-        if(myString != null){
 
-            int index = 0;
-            for(int i = 0; i < spinner.getCount(); i++){
-                if(spinner.getItemAtPosition(i).toString().equals(myString)){
-                    spinner.setSelection(i);
-                    break;
-                }
-            }
-        }
 
-    }
 
 
     public static String readStream(InputStream in) {

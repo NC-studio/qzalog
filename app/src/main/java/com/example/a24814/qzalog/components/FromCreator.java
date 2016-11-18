@@ -2,24 +2,24 @@ package com.example.a24814.qzalog.components;
 
 
 import android.content.Context;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.R;
 import com.example.a24814.qzalog.models.Form;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.a24814.qzalog.models.SimpleSpinnerValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 
@@ -80,6 +80,48 @@ public class FromCreator {
          * Set unit of measure of edit texts
          */
         ((TextView) v.findViewById(R.id.measure)).setText(field.getMeasure());
+
+        EditText editText1 = (EditText) v.findViewById(R.id.field1);
+        if(field.getSelectedValue() != null){
+            editText1.setText(field.getSelectedValue());
+        }
+
+        EditText editText2 = (EditText) v.findViewById(R.id.field2);
+        if(field.getSelectedValue2() != null){
+            editText2.setText(field.getSelectedValue2());
+        }
+
+        editText1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                field.setSelectedValue(s.toString());
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
+        });
+        editText2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                field.setSelectedValue2(s.toString());
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
+        });
+
+
+
         return v;
     }
 
@@ -94,7 +136,7 @@ public class FromCreator {
         /**
          * The values of this spinner
          */
-        JSONObject values = field.getJsonList();
+        List<SimpleSpinnerValue> spinner_list = field.getJsonList();
 
         /**
          * Creates and fills array for spinner, alse it creates Hash map for select Events
@@ -104,48 +146,31 @@ public class FromCreator {
         spinnerlist.add(field.getPlaceholder());
         Integer i = 1;
         Integer selectedPosition = 0;
-        try {
-            Iterator<String> iter = values.keys();
-            while (iter.hasNext()) {
-                String key = iter.next();
-                try {
-
-                    spinnerValues.put(Integer.valueOf(i), Integer.valueOf(key));
-                    spinnerlist.add(values.getString(key));
-
-                    /*
-                    * Set selected value of spinner
-                     */
-                    if(field.getSelectedValue() != null && field.getSelectedValue().equals(String.valueOf(key))){
-                        selectedPosition = i;
-                        Log.d("test", field.getSelectedValue());
-                        Log.d("test", String.valueOf(key));
-                    }
 
 
+        for (SimpleSpinnerValue spinner_value : spinner_list) {
+            String key = String.valueOf(spinner_value.getId());
+            spinnerValues.put(Integer.valueOf(i), Integer.valueOf(key));
+            spinnerlist.add(spinner_value.getName());
 
-                    i = i + 1;
-                } catch (JSONException e) {
-                }
+            if(field.getSelectedValue() != null && field.getSelectedValue().equals(String.valueOf(key))){
+                selectedPosition = i;
+
             }
-            spinner.setAdapter(new ArrayAdapter<String>(context, R.layout.spinner_item,
-                    spinnerlist));
+            i = i + 1;
+        }
+        spinner.setAdapter(new ArrayAdapter<String>(context, R.layout.spinner_item,
+                spinnerlist));
              /*
             * Set selected value of spinner
              */
-            spinner.setSelection(selectedPosition);
-            //Helpers.selectSpinnerValue(spinner, field.getSelectedValue());
+        spinner.setSelection(selectedPosition);
+        //Helpers.selectSpinnerValue(spinner, field.getSelectedValue());
 
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }
         /**
          * Save Hash Map to Form object for using it in select events
          */
         field.setList(spinnerValues);
-
-
 
         /**
          * Select events
@@ -160,9 +185,6 @@ public class FromCreator {
                     field.setSelectedValue(null);
                 }
 
-
-
-               // Log.d("test", spinnerlist.get(position).toString());
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {

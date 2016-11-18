@@ -16,11 +16,15 @@ import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.components.Defaults;
 import com.example.a24814.qzalog.components.FromCreator;
 import com.example.a24814.qzalog.models.Form;
+import com.example.a24814.qzalog.models.Objects;
+import com.example.a24814.qzalog.models.SimpleSpinnerValue;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,6 +34,7 @@ public class FormFragment extends Fragment {
     private final String TAG = "FormFragment";
 
     private FrameLayout regionSpinner;
+
 
     private String regionId;
 
@@ -49,15 +54,16 @@ public class FormFragment extends Fragment {
         view = inflater.inflate(R.layout.form,
                 container, false);
         initView();
-
         fields = ((FormActivity)getActivity()).getFields();
-
         if(fields.size() > 0){
             parseSavedList();
-            Log.d("test", "test123");
         }else{
             parseJson();
         }
+
+
+
+
 
         return view;
     }
@@ -79,9 +85,16 @@ public class FormFragment extends Fragment {
         searchFooter.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String request = generateUrlRequest();
-                Log.d("test request", request);
+                ((BaseFile) getActivity().getApplication()).setUrl(request);
+                ((BaseFile) getActivity().getApplication()).setObjects(new ArrayList<Objects>());
+                ((BaseFile) getActivity().getApplication()).setPage(1);
+                getActivity().finish();
             }
         });
+
+
+
+
     }
 
     @Override
@@ -102,10 +115,6 @@ public class FormFragment extends Fragment {
         }catch (JSONException e){
             Log.d(TAG, e.getMessage());
         }
-
-
-
-
     }
 
     /**
@@ -116,6 +125,7 @@ public class FormFragment extends Fragment {
     private void parseJson(){
         formObject = ((FormActivity)getActivity()).getForm();
         try {
+            //get JSON OBJECT throw name 'fields'
             JSONObject jObject = formObject.getJSONObject("fields");
 
             Iterator<String> iter = jObject.keys();
@@ -133,20 +143,59 @@ public class FormFragment extends Fragment {
                     String name = value.getString("name");
                     String name2 = value.getString("name2");
                     Integer type = value.getInt("type");
-                    Integer main = value.getInt("main");
+                    //Integer main = value.getInt("main");
+                    Integer position = value.getInt("position");
+
+                    //Declare List of spinner values
+                    List<SimpleSpinnerValue> spinner_values = null;
                     JSONObject jsonList = null;
                     if(type == 2){
+                        //Get JSON object of values
                         jsonList = value.getJSONObject("values");
+
+                        //iterate jsonObject of spinner values and fill List for spinner
+                        Iterator<String> iterInner = jsonList.keys();
+                        spinner_values = new ArrayList<SimpleSpinnerValue>();
+                        while (iterInner.hasNext()) {
+                            String keyInner = iterInner.next();
+                            JSONObject valueInner = jsonList.getJSONObject(keyInner);
+                            SimpleSpinnerValue simpleSpinnerValue = new SimpleSpinnerValue(valueInner.getInt("id"), valueInner.getString("name"), Integer.valueOf(keyInner));
+                            spinner_values.add(simpleSpinnerValue);
+                        }
+
+                        //Sort spinner values by position
+                        Collections.sort(spinner_values, new Comparator<SimpleSpinnerValue>(){
+                            public int compare(SimpleSpinnerValue emp1, SimpleSpinnerValue emp2) {
+                                return Integer.valueOf(emp1.getPosition()).compareTo(emp2.getPosition());
+                            }
+                        });
                     }
-                    Form field = new Form(id, title, name, name2, unit_of_measure, placeholder, type, main, jsonList);
+                    Form field = new Form(id, title, name, name2, unit_of_measure, placeholder, type, spinner_values, position);
                     fields.add(field);
-                    FromCreator fromCreator = new FromCreator(getActivity(), field);
-                    View v = fromCreator.createField();
-                    formFields.addView(v);
+
                 } catch (JSONException e) {
                     Log.d(TAG, e.toString());
                 }
             }
+            Collections.sort(fields, new Comparator<Form>(){
+                public int compare(Form emp1, Form emp2) {
+                    // ## Ascending order
+                    //return id2.compareToIgnoreCase(id1); // To compare string values
+                     return Integer.valueOf(emp1.getPosition()).compareTo(emp2.getPosition()); // To compare integer values
+
+                    // ## Descending order
+                    // return emp2.getFirstName().compareToIgnoreCase(emp1.getFirstName()); // To compare string values
+                     //return Integer.valueOf(emp2.getPosition()).compareTo(emp1.getPosition()); // To compare integer values
+                }
+            });
+
+            for (Form field : fields) {
+                FromCreator fromCreator = new FromCreator(getActivity(), field);
+                View v = fromCreator.createField();
+                formFields.addView(v);
+            }
+
+
             ((BaseFile) getActivity().getApplication()).setFields(fields);
         }catch (Throwable t) {
             Log.d(TAG, t.getMessage());
@@ -167,9 +216,29 @@ public class FormFragment extends Fragment {
 
         Integer category_id = ((FormActivity)getActivity()).getCategoryId();
         url = url + "?category="+String.valueOf(category_id);
+        url = url + "&ObjectsSearch[region_id]=";
         if(regionId != null){
-            url = url + "&ObjectsSearch[region_id]=" + regionId;
+            url = url +  regionId;
         }
+
+
+        for (Form field : fields) {
+           if(field.getType() == 1){
+               if(field.getSelectedValue() != null){
+                   url = url + "&" + field.getName() + "=" + field.getSelectedValue();
+               }
+               if(field.getSelectedValue2() != null){
+                   url = url + "&" + field.getName2() + "=" + field.getSelectedValue2();
+               }
+           }else{
+               if(field.getType() == 2){
+                   if(field.getSelectedValue() != null){
+                       url = url + "&" + field.getName() + "=" + field.getSelectedValue();
+                   }
+               }
+           }
+        }
+
 
         return url;
     }

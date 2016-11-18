@@ -14,6 +14,8 @@ import java.util.List;
 
 public class BaseFile extends Application {
 
+    private String urlRequest = Defaults.CATEGORY_PATH;
+
     private List<Category> cagegoryList = new ArrayList<Category>();
 
     private JSONObject formValues;
@@ -26,6 +28,14 @@ public class BaseFile extends Application {
 
     private List<Objects> objectList = new ArrayList<Objects>();
 
+    private Integer page = 1;
+
+
+
+
+    public Integer getPage(){return this.page;};
+
+    public void setPage(Integer page){this.page = page;};
 
     public List<Category> getCategories() {
         return this.cagegoryList;
@@ -60,6 +70,14 @@ public class BaseFile extends Application {
 
     public void setObjects(List<Objects> objectList) {
         this.objectList = objectList;
+    }
+
+    public String getUrl(){
+        return urlRequest;
+    }
+
+    public void setUrl(String url){
+       this.urlRequest = url;
     }
 
 

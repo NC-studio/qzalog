@@ -111,7 +111,7 @@ public class DataBaseAdapter {
     public JSONObject getForm(Integer category_id){
         final String TABLE_NAME = "categories";
 
-        String selectQuery = "SELECT  form FROM " + TABLE_NAME + " WHERE category_id = " + category_id;
+        String selectQuery = "SELECT form FROM " + TABLE_NAME + " WHERE category_id = " + category_id;
         SQLiteDatabase db  = mDbHelper.getReadableDatabase();
         Cursor cursor      = db.rawQuery(selectQuery, null);
 

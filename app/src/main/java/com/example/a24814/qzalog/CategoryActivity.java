@@ -14,8 +14,11 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
+import com.example.a24814.qzalog.components.Defaults;
 import com.example.a24814.qzalog.models.Category;
+import com.example.a24814.qzalog.models.Objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryActivity extends AppCompatActivity {
@@ -44,6 +47,23 @@ public class CategoryActivity extends AppCompatActivity {
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
+
+
+
+            Integer previusCategory = ((BaseFile) getApplication()).getCategoryId();
+            if(previusCategory == null || previusCategory != category.getObjectId()){
+
+                ((BaseFile) getApplication()).setCategoryId( category.getObjectId());
+
+                String url = Defaults.CATEGORY_PATH + "?category="+String.valueOf(category.getObjectId());
+
+                ((BaseFile) getApplication()).setPage(1);
+                ((BaseFile) getApplication()).setUrl(url);
+                ((BaseFile) getApplication()).setObjects(new ArrayList<Objects>());
+
+            }
+
+
         }
 
         initFragment(savedInstanceState);
