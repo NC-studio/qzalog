@@ -16,6 +16,7 @@ import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.components.Defaults;
 import com.example.a24814.qzalog.components.FromCreator;
 import com.example.a24814.qzalog.models.Form;
+import com.example.a24814.qzalog.models.FormHistory;
 import com.example.a24814.qzalog.models.Objects;
 import com.example.a24814.qzalog.models.SimpleSpinnerValue;
 
@@ -48,18 +49,21 @@ public class FormFragment extends Fragment {
 
     private RelativeLayout searchFooter;
 
+    private Boolean created = false;
+
+    private Boolean sended = false;
+
+    private Boolean clearedHistory = false;
+
+    private Boolean regionSelecting = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.form,
                 container, false);
         initView();
-        fields = ((FormActivity)getActivity()).getFields();
-        if(fields.size() > 0){
-            parseSavedList();
-        }else{
-            parseJson();
-        }
+
 
 
 
@@ -77,6 +81,9 @@ public class FormFragment extends Fragment {
         regionSpinner = (FrameLayout) view.findViewById(R.id.regionSpinner);
         regionSpinner.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+
+                regionSelecting =true;
+
                 Intent intent = new Intent(getActivity(), ListActivity.class);
                 startActivity(intent);
             }
@@ -85,10 +92,20 @@ public class FormFragment extends Fragment {
         searchFooter.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String request = generateUrlRequest();
+
                 ((BaseFile) getActivity().getApplication()).setUrl(request);
                 ((BaseFile) getActivity().getApplication()).setObjects(new ArrayList<Objects>());
-                ((BaseFile) getActivity().getApplication()).setPage(1);
-                getActivity().finish();
+               // ((BaseFile) getActivity().getApplication()).setPage(1);
+
+                sended = true;
+                clearedHistory = false;
+
+                ((BaseFile) getActivity().getApplication()).addToFormHistory();
+                Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                startActivity(intent);
+
+
+               // getActivity().finish();
             }
         });
 
@@ -99,7 +116,7 @@ public class FormFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();  // Always call the superclass method first
+        super.onResume();
         JSONObject formRegion = ((BaseFile) getActivity().getApplication()).getFormRegion();
         try {
             String regionIdValue = formRegion.getString("id");
@@ -114,6 +131,43 @@ public class FormFragment extends Fragment {
             }
         }catch (JSONException e){
             Log.d(TAG, e.getMessage());
+        }
+        fields = ((FormActivity)getActivity()).getFields();
+        if(fields.size() > 0){
+            parseSavedList();
+        }else{
+            parseJson();
+        }
+
+
+        if(regionSelecting != true && created == true) {
+            if(clearedHistory == false) {
+                clearedHistory = true;
+
+
+                List<FormHistory> formHistory = ((BaseFile) getActivity().getApplication()).getFormHistory();
+                if (formHistory.size() > 1) {
+                    FormHistory formHistoryObj = formHistory.get(formHistory.size() - 2);
+                    String request = formHistoryObj.getUrl();
+                    List<Form> fields = formHistoryObj.getFields();
+                    JSONObject region = formHistoryObj.getRegion();
+
+                    ((BaseFile) getActivity().getApplication()).setFields(fields);
+                    ((BaseFile) getActivity().getApplication()).setUrl(request);
+                    ((BaseFile) getActivity().getApplication()).setFormRegion(region);
+                    Log.d("testtestest", region.toString());
+
+
+                  //  ((BaseFile) getActivity().getApplication()).setPage(1);
+                    ((BaseFile) getActivity().getApplication()).setObjects(new ArrayList<Objects>());
+                    formHistory.remove(formHistory.size() - 1);
+                }
+            }
+
+
+        }else{
+            regionSelecting = false;
+            created = true;
         }
     }
 
@@ -159,7 +213,7 @@ public class FormFragment extends Fragment {
                         while (iterInner.hasNext()) {
                             String keyInner = iterInner.next();
                             JSONObject valueInner = jsonList.getJSONObject(keyInner);
-                            SimpleSpinnerValue simpleSpinnerValue = new SimpleSpinnerValue(valueInner.getInt("id"), valueInner.getString("name"), Integer.valueOf(keyInner));
+                            SimpleSpinnerValue simpleSpinnerValue = new SimpleSpinnerValue(valueInner.getString("id"), valueInner.getString("name"), Integer.valueOf(keyInner));
                             spinner_values.add(simpleSpinnerValue);
                         }
 
@@ -238,10 +292,10 @@ public class FormFragment extends Fragment {
                }
            }
         }
-
-
         return url;
     }
+
+
 
 
 }

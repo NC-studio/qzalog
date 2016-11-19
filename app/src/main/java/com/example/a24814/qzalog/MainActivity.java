@@ -31,9 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Frame view for fragments
     FrameLayout flContent;
 
-
     private DataBaseAdapter dbHelper;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

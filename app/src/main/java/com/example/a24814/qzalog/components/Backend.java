@@ -73,18 +73,18 @@ public class Backend {
         }.execute();
     }
 
-    public static void getObjects(final Activity activity, final CategoryObjectsFragment fragment, final String url) {
+    public static void getObjects(final Activity activity, final CategoryObjectsFragment fragment, final String url, final Integer page) {
 
         new BackendCallback<Boolean>(activity, false){
             @Override
             public String doInBackground(Void... params )
             {
                 setValue(false);
-                Integer page = ((BaseFile) activity.getApplication()).getPage();
+                //Integer page = ((BaseFile) activity.getApplication()).getPage();
                 String jsonResponse = Helpers.getStringByUrl(url + "&page=" + String.valueOf(page));
 
-                Log.d("test", url);
-                Log.d("test", jsonResponse);
+               // Log.d("test", url);
+               // Log.d("test", jsonResponse);
 
                 if(jsonResponse != null){
                     List<Objects> objects = ((BaseFile) activity.getApplication()).getObjects();
@@ -123,7 +123,7 @@ public class Backend {
                     }
 
                     ((BaseFile) activity.getApplication()).setObjects(objects);;
-                    ((BaseFile) activity.getApplication()).setPage(page + 1);
+                   // ((BaseFile) activity.getApplication()).setPage(page + 1);
 
                 }
 

@@ -29,6 +29,8 @@ public class CategoryActivity extends AppCompatActivity {
 
     private Integer categoryPosition;
 
+    private Integer previusCategory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -48,26 +50,19 @@ public class CategoryActivity extends AppCompatActivity {
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
 
-
-
-            Integer previusCategory = ((BaseFile) getApplication()).getCategoryId();
+            previusCategory = ((BaseFile) getApplication()).getCategoryId();
             if(previusCategory == null || previusCategory != category.getObjectId()){
-
                 ((BaseFile) getApplication()).setCategoryId( category.getObjectId());
-
                 String url = Defaults.CATEGORY_PATH + "?category="+String.valueOf(category.getObjectId());
-
-                ((BaseFile) getApplication()).setPage(1);
+               // ((BaseFile) getApplication()).setPage(1);
                 ((BaseFile) getApplication()).setUrl(url);
                 ((BaseFile) getApplication()).setObjects(new ArrayList<Objects>());
 
+                ((BaseFile) getApplication()).setFormHistory();
+
             }
-
-
         }
-
         initFragment(savedInstanceState);
-
         //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,8 +70,11 @@ public class CategoryActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
+
+
+
+
 
     private void initFragment(Bundle savedInstanceState){
         FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);

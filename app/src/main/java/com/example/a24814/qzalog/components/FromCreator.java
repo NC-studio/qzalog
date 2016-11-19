@@ -141,7 +141,7 @@ public class FromCreator {
         /**
          * Creates and fills array for spinner, alse it creates Hash map for select Events
          */
-        Map<Integer,Integer> spinnerValues = new HashMap<>();
+        Map<Integer,String> spinnerValues = new HashMap<>();
         ArrayList<String> spinnerlist = new ArrayList<String>();
         spinnerlist.add(field.getPlaceholder());
         Integer i = 1;
@@ -150,10 +150,15 @@ public class FromCreator {
 
         for (SimpleSpinnerValue spinner_value : spinner_list) {
             String key = String.valueOf(spinner_value.getId());
-            spinnerValues.put(Integer.valueOf(i), Integer.valueOf(key));
+
+
+
+
+
+            spinnerValues.put(Integer.valueOf(i), key);
             spinnerlist.add(spinner_value.getName());
 
-            if(field.getSelectedValue() != null && field.getSelectedValue().equals(String.valueOf(key))){
+            if(field.getSelectedValue() != null && field.getSelectedValue().equals(key)){
                 selectedPosition = i;
 
             }
@@ -179,8 +184,8 @@ public class FromCreator {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position > 0){
-                    int key = field.getList().get(position);
-                    field.setSelectedValue(String.valueOf(key));
+                    String key = field.getList().get(position);
+                    field.setSelectedValue(key);
                 }else{
                     field.setSelectedValue(null);
                 }

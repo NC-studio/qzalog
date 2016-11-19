@@ -36,11 +36,15 @@ public class FormActivity extends AppCompatActivity {
 
     private List<Form> fields = new ArrayList<Form>();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,24 +60,32 @@ public class FormActivity extends AppCompatActivity {
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
 
+            //dynamic
+            DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(this, true);
+            formObject = myDatabaseHelper.getForm(category.getObjectId());
+            myDatabaseHelper.close();
 
-            previusCategory = ((BaseFile) getApplication()).getCategoryId();
-            if(previusCategory == null || previusCategory != extras.getInt("category")){
-                previusCategory =  extras.getInt("category");
-                ((BaseFile) getApplication()).setCategoryId( previusCategory);
 
-            }else{
-                fields = ((BaseFile) getApplication()).getFields();
-            }
+
+            //previusCategory = ((BaseFile) getApplication()).getCategoryId();
+           // if(previusCategory == null || previusCategory != extras.getInt("category")){
+              //  previusCategory =  extras.getInt("category");
+               // ((BaseFile) getApplication()).setCategoryId( previusCategory);
+
+           // }else{
+
+            //}
+
+
+
 
         }
 
-        //dynamic
-        DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(this, true);
-        formObject = myDatabaseHelper.getForm(category.getObjectId());
-        myDatabaseHelper.close();
+
+        fields = ((BaseFile) getApplication()).getFields();
 
         initFragment(savedInstanceState);
+
 
         //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -135,4 +147,36 @@ public class FormActivity extends AppCompatActivity {
     public List<Form> getFields() {
         return fields;
     }
+
+    /*public void setClearedHistory(Boolean clearedHistory){
+        this.clearedHistory = clearedHistory;
+    }
+
+    public void setSended(Boolean sended){
+        this.sended = sended;
+    }
+
+    public void setRegionSelecting(Boolean regionSelecting){
+        this.regionSelecting = regionSelecting;
+    }*/
+
+
+
+
+    @Override
+    public void onResume()
+    {
+
+
+        super.onResume();  // optional depending on your needs
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+
+        finish();
+    }
+
+
 }

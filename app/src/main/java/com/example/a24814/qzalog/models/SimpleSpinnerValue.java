@@ -5,7 +5,7 @@ package com.example.a24814.qzalog.models;
  */
 public class SimpleSpinnerValue {
 
-    private Integer id;
+    private String id;
 
     private String name;
 
@@ -16,7 +16,7 @@ public class SimpleSpinnerValue {
     }
 
 
-    public SimpleSpinnerValue(Integer id, String name, Integer position) {
+    public SimpleSpinnerValue(String id, String name, Integer position) {
         super();
         this.id = id;
         this.name = name;
@@ -24,7 +24,7 @@ public class SimpleSpinnerValue {
 
 
     }
-    public Integer getId()
+    public String getId()
     {
         return id;
     }

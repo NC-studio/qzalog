@@ -70,23 +70,6 @@ public class CategoryFragment extends Fragment {
         //loadingFooter = factory.inflate(R.layout.list_loader, null);
     }
 
-
-   /* private void initImageLoader(){
-        // UNIVERSAL IMAGE LOADER SETUP
-        options = new DisplayImageOptions.Builder()
-                .cacheOnDisc(true).cacheInMemory(true)
-                //.showImageForEmptyUri(R.drawable.avatar)
-                //.showImageOnFail(R.drawable.avatar)
-                //.showImageOnLoading(R.drawable.photo_24dip_xxxhdpi)
-                .imageScaleType(ImageScaleType.EXACTLY).displayer(new FadeInBitmapDisplayer(300)).build();
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(options).memoryCache(new WeakMemoryCache())
-                .discCacheSize(100 * 1024 * 1024).build();
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(config);
-    }
-*/
     private void initAdapter(){
         categories = ((BaseFile) getActivity().getApplication()).getCategories();
         getCategories();

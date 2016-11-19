@@ -1,9 +1,11 @@
 package com.example.a24814.qzalog.components;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.a24814.qzalog.models.Category;
 import com.example.a24814.qzalog.models.Form;
+import com.example.a24814.qzalog.models.FormHistory;
 import com.example.a24814.qzalog.models.Objects;
 
 import org.json.JSONObject;
@@ -16,26 +18,26 @@ public class BaseFile extends Application {
 
     private String urlRequest = Defaults.CATEGORY_PATH;
 
-    private List<Category> cagegoryList = new ArrayList<Category>();
-
-    private JSONObject formValues;
-
-    private JSONObject formRegion = new JSONObject();
+    private Integer categoryId;
 
     private List<Form> fields = new ArrayList<Form>();
 
-    private Integer categoryId;
+    private List<Category> cagegoryList = new ArrayList<Category>();
+
+    private JSONObject formRegion = new JSONObject();
+
+    private List<FormHistory> formHistory = new ArrayList<FormHistory>();
 
     private List<Objects> objectList = new ArrayList<Objects>();
 
-    private Integer page = 1;
+    //private Integer page = 1;
 
 
 
 
-    public Integer getPage(){return this.page;};
+   // public Integer getPage(){return this.page;};
 
-    public void setPage(Integer page){this.page = page;};
+   // public void setPage(Integer page){this.page = page;};
 
     public List<Category> getCategories() {
         return this.cagegoryList;
@@ -77,8 +79,25 @@ public class BaseFile extends Application {
     }
 
     public void setUrl(String url){
-       this.urlRequest = url;
+        this.urlRequest = url;
     }
+
+    public List<FormHistory> getFormHistory(){
+        return formHistory;
+    }
+
+    public void setFormHistory(){
+        this.formHistory =  new ArrayList<FormHistory>();
+        addToFormHistory();
+        Log.d("testtest", "setted");
+    }
+
+    public void addToFormHistory(){
+        FormHistory formHistoryObj = new FormHistory(getUrl(), getFields(), getFormRegion());
+        formHistory.add(formHistoryObj);
+    }
+
+
 
 
 }

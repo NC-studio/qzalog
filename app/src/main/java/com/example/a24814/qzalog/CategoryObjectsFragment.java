@@ -3,7 +3,6 @@ package com.example.a24814.qzalog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,7 +31,7 @@ public class CategoryObjectsFragment extends Fragment {
 
     private CategoryObjectsFragment fragment;
 
-    private List<Objects> objects;
+    private List<Objects> objects = new ArrayList<Objects>();;
 
     private ListView objectsList;
 
@@ -53,6 +53,10 @@ public class CategoryObjectsFragment extends Fragment {
 
     private String urlRequest;
 
+    private Integer page = 1;
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +66,11 @@ public class CategoryObjectsFragment extends Fragment {
         view = inflater.inflate(R.layout.objects_list,
                 container, false);
 
+        urlRequest = ((BaseFile) getActivity().getApplication()).getUrl();
+        objects = ((BaseFile) getActivity().getApplication()).getObjects();
+
         initView();
+        initAdapter();
 
         return view;
     }
@@ -71,26 +79,24 @@ public class CategoryObjectsFragment extends Fragment {
     public void onResume() {
         super.onResume();  // Always call the superclass method first
 
-        urlRequest = ((BaseFile) getActivity().getApplication()).getUrl();
-        objects = ((BaseFile) getActivity().getApplication()).getObjects();
-        initAdapter();
+
+
+
     }
 
 
 
-    private void initView(){
 
+    private void initView(){
         objectsList = (ListView) view.findViewById(R.id.objectsList);
         final LayoutInflater factory = getActivity().getLayoutInflater();
         loadingFooter = factory.inflate(R.layout.list_loader, null);
         objectsList.addFooterView(loadingFooter);
-
     }
 
 
 
     private void initAdapter(){
-
 
 
         adapter = new ObjectAdapter(getActivity(), R.layout.objects_list_item, objects);
@@ -104,9 +110,8 @@ public class CategoryObjectsFragment extends Fragment {
 
             }
         });
-
         isLoading = true;
-        Backend.getObjects(getActivity(), fragment, urlRequest);
+        Backend.getObjects(getActivity(), fragment, urlRequest, page);
 
     }
 
@@ -134,10 +139,10 @@ public class CategoryObjectsFragment extends Fragment {
             int lastInScreen = firstVisibleItem + visibleItemCount;
             if (lastInScreen == totalItemCount) {
                 if(isUploaded == false && isLoading==false) {
-
-                    loadingFooter.setVisibility(View.VISIBLE);
                     isLoading = true;
-                    Backend.getObjects(getActivity(), fragment, urlRequest);
+                    loadingFooter.setVisibility(View.VISIBLE);
+
+                    Backend.getObjects(getActivity(), fragment, urlRequest, page);
                 }
             }
         }
@@ -154,7 +159,6 @@ public class CategoryObjectsFragment extends Fragment {
         TextView price;
         TextView discount;
         TextView info;
-
 
     }
 
@@ -231,20 +235,18 @@ public class CategoryObjectsFragment extends Fragment {
     }
 
     public void backendResponse(Boolean isUploaded){
-
+        page = page + 1;
 
         loadingFooter.setVisibility(View.GONE);
 
 
         this.isUploaded = isUploaded;
         isLoading = false;
+
         objects = ((BaseFile) getActivity().getApplication()).getObjects();
-
-        Log.d("test  backendResponse",objects.toString());
-
-
         adapter.notifyDataSetChanged();
     }
+
 
 
 
