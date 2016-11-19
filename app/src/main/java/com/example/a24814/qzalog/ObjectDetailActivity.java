@@ -1,6 +1,7 @@
 package com.example.a24814.qzalog;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -37,11 +38,7 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         ((TextView)toolbar.findViewById(R.id.toolbar_title)).setText("Объявление");
 
-
         initFragment(savedInstanceState);
-
-
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,27 +67,34 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
     }
 
 
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
+
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.action_map);
+        if(item != null) {
+            item.setVisible(true);
+            //item.setActionView(R.layout.toolbar_textview);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        //if (id == R.id.action_settings) {
-        //  return true;
-        //  }
+        if (id == R.id.action_map) {
+            Intent intent = new Intent(this, MapActivity.class);
+            intent.putExtra("objId", 123);
+            startActivity(intent);
+
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

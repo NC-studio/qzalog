@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".components.BaseFile"
@@ -12,6 +14,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAyMiAgTq_34jaE6bF3-zcnDxAgHUcBGfs" />
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
@@ -29,7 +35,8 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ListActivity" />
-        <activity android:name=".ObjectDetailActivity"></activity>
+        <activity android:name=".ObjectDetailActivity" />
+        <activity android:name=".MapActivity"></activity>
     </application>
 
 </manifest>

@@ -16,5 +16,13 @@
         android:visible="false"
         app:showAsAction="ifRoom"
         />
+    <item
+        android:id="@+id/action_map"
+        android:orderInCategory="200"
+        android:title="Map"
+        android:icon="@android:drawable/ic_menu_search"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        />
 
 </menu>

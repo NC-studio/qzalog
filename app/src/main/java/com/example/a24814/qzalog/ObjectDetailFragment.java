@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.example.a24814.qzalog.models.Objects;
 
@@ -22,6 +23,8 @@ public class ObjectDetailFragment extends Fragment {
 
     private View view;
 
+    private RelativeLayout loader;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -31,16 +34,20 @@ public class ObjectDetailFragment extends Fragment {
                 container, false);
 
 
+        initView();
+
         return view;
     }
 
     private void initView(){
-
+        loader = (RelativeLayout) view.findViewById(R.id.loader);
     }
 
     public void backendResponse(Boolean isUploaded){
-
+        loader.setVisibility(View.GONE);
     }
+
+
 
 
 
