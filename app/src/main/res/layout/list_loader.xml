@@ -9,9 +9,7 @@
             android:layout_height="40dp"
             android:layout_width="40dp"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/ctrlActivityIndicator"
-            android:indeterminateOnly="true"
-            android:keepScreenOn="true"/>
+            android:id="@+id/ctrlActivityIndicator"/>
 
 
 </LinearLayout>

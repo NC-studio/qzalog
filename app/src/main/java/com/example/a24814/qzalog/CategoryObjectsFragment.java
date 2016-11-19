@@ -1,6 +1,7 @@
 package com.example.a24814.qzalog;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ public class CategoryObjectsFragment extends Fragment {
 
     private Integer page = 1;
 
+    private Integer objNumber = 0;
 
 
 
@@ -107,7 +109,10 @@ public class CategoryObjectsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
                                     long arg3) {
-
+                Objects obj = objects.get(arg2);
+                Intent intent = new Intent(getActivity(), ObjectDetailActivity.class);
+                intent.putExtra("objId", obj.getId());
+                startActivity(intent);
             }
         });
         isLoading = true;
@@ -234,17 +239,33 @@ public class CategoryObjectsFragment extends Fragment {
         }
     }
 
-    public void backendResponse(Boolean isUploaded){
+    public void backendResponse(List<Objects> clones){
         page = page + 1;
-
         loadingFooter.setVisibility(View.GONE);
 
+        for (Objects item : clones) {
+            objects.add(item);
+        }
+        adapter.notifyDataSetChanged();
+        objectsList.requestLayout();
+        ((BaseFile) getActivity().getApplication()).setObjects(objects);
 
-        this.isUploaded = isUploaded;
+
+        if(clones.size() % 10 > 0 || objNumber == objects.size()){
+            this.isUploaded = true;
+            objectsList.removeFooterView(loadingFooter);
+        }else{
+            objNumber = objects.size();
+        }
+
         isLoading = false;
 
-        objects = ((BaseFile) getActivity().getApplication()).getObjects();
-        adapter.notifyDataSetChanged();
+        //List<Objects> objects1 = ((BaseFile) getActivity().getApplication()).getObjects();
+
+       // objects =  ((BaseFile) getActivity().getApplication()).getObjects();
+
+
+
     }
 
 

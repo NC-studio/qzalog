@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,19 +76,24 @@ public class Backend {
 
     public static void getObjects(final Activity activity, final CategoryObjectsFragment fragment, final String url, final Integer page) {
 
-        new BackendCallback<Boolean>(activity, false){
+        new BackendCallback<List<Objects>>(activity, false){
             @Override
             public String doInBackground(Void... params )
             {
-                setValue(false);
+               // setValue(false);
+
                 //Integer page = ((BaseFile) activity.getApplication()).getPage();
                 String jsonResponse = Helpers.getStringByUrl(url + "&page=" + String.valueOf(page));
 
-               // Log.d("test", url);
+               /// Log.d("test", url);
                // Log.d("test", jsonResponse);
 
                 if(jsonResponse != null){
                     List<Objects> objects = ((BaseFile) activity.getApplication()).getObjects();
+
+                   // List<Objects> clones = Helpers.copyList(objects);
+                    List<Objects> clones = new ArrayList<Objects>();
+
                     try {
                         JSONObject jsonObj = new JSONObject(jsonResponse);
 
@@ -106,23 +112,24 @@ public class Backend {
 
 
                             Objects obj = new Objects(id, title, image, region, price, discount, info);
-                            objects.add(obj);
+                            clones.add(obj);
 
                         }
-                        if(objectsArray.length() < 10){
-                               setValue(true);
-                        }
+                        //if(objectsArray.length() < 10){
+                               //setValue(true);
+                       // }
 
 
 
 
                     } catch (final JSONException e) {
-                        setValue(false);
-                        setValue(true);
+                       // setValue(true);
                         Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
                     }
+                    setValue(clones);
 
-                    ((BaseFile) activity.getApplication()).setObjects(objects);;
+
+                   // ((BaseFile) activity.getApplication()).setObjects(objects);;
                    // ((BaseFile) activity.getApplication()).setPage(page + 1);
 
                 }
@@ -131,11 +138,11 @@ public class Backend {
                 return null;
             }
             @Override
-            public void handleResponse( Boolean success )
+            public void handleResponse( List<Objects> clones )
             {
-
-                super.handleResponse( success );
-                fragment.backendResponse(success);
+                Log.d("testtest", String.valueOf(clones.size()));
+                super.handleResponse( clones );
+                fragment.backendResponse(clones);
 
 
             }

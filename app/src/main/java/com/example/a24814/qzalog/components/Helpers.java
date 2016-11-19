@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -77,6 +79,17 @@ public class Helpers {
         }
         return response.toString();
     }
+
+    public static <T> List<T> copyList(List<T> source) {
+        List<T> dest = new ArrayList<T>();
+        for (T item : source) { dest.add(item); }
+        return dest;
+    }
+
+
+
+
+
 
 
 

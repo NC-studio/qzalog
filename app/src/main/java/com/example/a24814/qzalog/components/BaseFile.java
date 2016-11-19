@@ -30,14 +30,14 @@ public class BaseFile extends Application {
 
     private List<Objects> objectList = new ArrayList<Objects>();
 
-    //private Integer page = 1;
+ //   private Integer objectsNumber = 0;
 
 
 
 
-   // public Integer getPage(){return this.page;};
+   // public Integer getObjectsNumber(){return this.objectsNumber;}
 
-   // public void setPage(Integer page){this.page = page;};
+   // public void setObjectsNumber(Integer objectsNumber){this.objectsNumber = objectsNumber;}
 
     public List<Category> getCategories() {
         return this.cagegoryList;
