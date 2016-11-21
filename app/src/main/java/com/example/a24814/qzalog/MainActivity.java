@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.a24814.qzalog.components.DataBaseAdapter;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -59,7 +61,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //init data base
         initDataBase();
 
+        //init goole map
+
+        Runnable r = new Runnable() {
+            public void run() {
+                try {
+                    MapsInitializer.initialize(getApplicationContext());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                MapView mapView = new MapView(MainActivity.this);
+                mapView.onCreate(null);
+            }
+        };
     }
+
+
 
     private void initFragment(Bundle savedInstanceState){
         flContent = (FrameLayout) findViewById(R.id.flContent);

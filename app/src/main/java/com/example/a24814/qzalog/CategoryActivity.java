@@ -73,44 +73,30 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onResume() {
-
-
-        super.onResume();
-    }
-
-
-
-
     private void initFragment(Bundle savedInstanceState){
         FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
 
         if (savedInstanceState == null) {
-
             Fragment newFragment = new CategoryObjectsFragment();
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
             // fragmentTransaction.replace(android.R.id.content, newFragment);
             fragmentTransaction.add(R.id.flContent, newFragment);
             fragmentTransaction.commit();
-
         }
 
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         if(item != null) {
             item.setVisible(true);
-
-            //DrawableCompat.setTint(item.getIcon(), ContextCompat.getColor(this, R.color.white));
-
-
+        }
+        MenuItem map = menu.findItem(R.id.action_map);
+        if(map != null) {
+            map.setVisible(true);
         }
         return true;
     }
@@ -122,6 +108,13 @@ public class CategoryActivity extends AppCompatActivity {
 
         if (id == R.id.action_search) {
             Intent intent = new Intent(this, FormActivity.class);
+            intent.putExtra("category", categoryPosition);
+            startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_map) {
+            Intent intent = new Intent(this, MapActivity.class);
             intent.putExtra("categoryId", categoryPosition);
             startActivity(intent);
             return true;

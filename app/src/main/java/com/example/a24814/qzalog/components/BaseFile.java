@@ -29,6 +29,8 @@ public class BaseFile extends Application {
 
     private List<Objects> objectList = new ArrayList<Objects>();
 
+    private Objects objectModel = null;
+
     private JSONObject images = new  JSONObject();
 
     private Integer imagesAmount = 1;
@@ -104,6 +106,14 @@ public class BaseFile extends Application {
 
     public void setImagesAmount(Integer imagesAmount) {
         this.imagesAmount = imagesAmount;
+    }
+
+    public Objects getObjectModel() {
+        return this.objectModel;
+    }
+
+    public void setObjectModel(Objects objectModel) {
+        this.objectModel = objectModel;
     }
 
 

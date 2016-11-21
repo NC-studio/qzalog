@@ -1,37 +1,31 @@
 package com.example.a24814.qzalog;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class ObjectDetailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+import com.example.a24814.qzalog.components.BaseFile;
+import com.example.a24814.qzalog.models.Category;
 
-    private final String TAG = "ObjectDetailActivity";
+import java.util.List;
 
+public class MapActivity extends AppCompatActivity {
 
-    private Context _context;
+    private Category category;
 
-    private Integer objId;
+    private Integer categoryPosition;
 
-    MenuItem mapIcon;
-
-    MenuItem likeIcon;
+    private String urlRequest = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        _context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -40,7 +34,20 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((TextView)toolbar.findViewById(R.id.toolbar_title)).setText("Объявление");
+        ((TextView)toolbar.findViewById(R.id.toolbar_title)).setText("Карта");
+
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            categoryPosition = extras.getInt("category");
+            if(categoryPosition != null) {
+                List<Category> categories = ((BaseFile) getApplication()).getCategories();
+                category = categories.get(categoryPosition);
+                ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
+                urlRequest = ((BaseFile) getApplication()).getUrl() + "&map=1";
+            }
+        }
+
 
         initFragment(savedInstanceState);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -49,21 +56,13 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
                 finish();
             }
         });
-
-
-        Bundle extras = getIntent().getExtras();
-        if(extras != null){
-            objId = extras.getInt("objId");
-        }
-
-
     }
 
     private void initFragment(Bundle savedInstanceState){
         FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
         if (savedInstanceState == null) {
 
-            Fragment newFragment = new ObjectDetailFragment();
+            Fragment newFragment = new MapFragment();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
@@ -77,48 +76,12 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
 
     }
 
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.main, menu);
-        mapIcon = menu.findItem(R.id.action_map);
-        likeIcon = menu.findItem(R.id.action_like);
-
-        return true;
+    public String getUrl(){
+        return urlRequest;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_map) {
-            Intent intent = new Intent(this, MapActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onBackPressed() {
+       finish();
     }
-
-
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        return false;
-    }
-
-    public Integer getObjId(){
-        return objId;
-    }
-
-    public MenuItem getMapIcon(){
-        return mapIcon;
-    }
-
-    public MenuItem getLikeIcon(){
-        return likeIcon;
-    }
-
-
 }

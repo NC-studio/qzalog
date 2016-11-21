@@ -24,7 +24,7 @@ import java.util.List;
 
 public class FormActivity extends AppCompatActivity {
 
-    Category category;
+    private Category category;
 
     private final String TAG = "FormActivity";
 
@@ -49,10 +49,6 @@ public class FormActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -64,15 +60,13 @@ public class FormActivity extends AppCompatActivity {
         if(extras != null){
             categoryPosition = extras.getInt("category");
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
-            category = categories.get(extras.getInt("category"));
+            category = categories.get(categoryPosition);
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
 
             //dynamic
             DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(this, true);
             formObject = myDatabaseHelper.getForm(category.getObjectId());
             myDatabaseHelper.close();
-
-
 
             //previusCategory = ((BaseFile) getApplication()).getCategoryId();
            // if(previusCategory == null || previusCategory != extras.getInt("category")){
@@ -82,10 +76,6 @@ public class FormActivity extends AppCompatActivity {
            // }else{
 
             //}
-
-
-
-
         }
 
 

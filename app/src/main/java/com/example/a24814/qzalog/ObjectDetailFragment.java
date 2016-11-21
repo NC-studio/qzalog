@@ -94,137 +94,135 @@ public class ObjectDetailFragment extends Fragment {
         Backend.loadObject(getActivity(), objId, this);
     }
 
-    public void backendResponse(Objects object){
+    public void backendResponse(Objects object) {
 
-        loader.setVisibility(View.GONE);
-        objContainer.setVisibility(View.VISIBLE);
-        (((ObjectDetailActivity)getActivity()).getMapIcon()).setVisible(true);
-        (((ObjectDetailActivity)getActivity()).getLikeIcon()).setVisible(true);
+        if (object != null) {
+            ((BaseFile) getActivity().getApplication()).setObjectModel(object);
 
-        String price = object.getPrice();
+            loader.setVisibility(View.GONE);
+            objContainer.setVisibility(View.VISIBLE);
+            (((ObjectDetailActivity) getActivity()).getLikeIcon()).setVisible(true);
+            if(object.getCoordX() != null && !object.getCoordX().isEmpty())
+                (((ObjectDetailActivity) getActivity()).getMapIcon()).setVisible(true);
 
-        ((TextView)view.findViewById(R.id.price)).setText(price);
+            String price = object.getPrice();
 
-
-        if(object.getDiscount() != null && !object.getDiscount().isEmpty()) {
-            TextView textView = (TextView) view.findViewById(R.id.price);
-            textView.setVisibility(View.VISIBLE);
-            textView.setText(object.getDiscount());
-        }
-        ((TextView)view.findViewById(R.id.dateCreated)).setText(object.getDateCreated());
-
-        ((TextView)view.findViewById(R.id.detailTitle)).setText(object.getName());
-
-        if(object.getComplex() != null && !object.getComplex().isEmpty()) {
-            TextView textView = (TextView) view.findViewById(R.id.detailComplex);
-            textView.setVisibility(View.VISIBLE);
-            textView.setText(object.getComplex());
-        }
-
-        ((TextView)view.findViewById(R.id.detailAddress)).setText(object.getRegion());
-
-        if(object.getDscription() != null && !object.getDscription().isEmpty()) {
-            TextView textView = (TextView) view.findViewById(R.id.description);
-            LinearLayout block = (LinearLayout) view.findViewById(R.id.descriptionBlock);
-            block.setVisibility(View.VISIBLE);
-            textView.setText(object.getDscription());
-        }
+            ((TextView) view.findViewById(R.id.price)).setText(price);
 
 
-        LinearLayout dynamicParams = (LinearLayout) view.findViewById(R.id.dynamicParams);
-        LinearLayout dynamicParamsBlock = (LinearLayout) view.findViewById(R.id.parametres);
+            if (object.getDiscount() != null && !object.getDiscount().isEmpty()) {
+                TextView textView = (TextView) view.findViewById(R.id.price);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(object.getDiscount());
+            }
+            ((TextView) view.findViewById(R.id.dateCreated)).setText(object.getDateCreated());
 
+            ((TextView) view.findViewById(R.id.detailTitle)).setText(object.getName());
 
-        JSONObject info = object.getInfoJson();
-        try {
-
-            Iterator<String> temp = info.keys();
-            int i = 0;
-            while (temp.hasNext()) {
-                i++;
-                View v =  inflater.inflate(R.layout.object_detail_dynamic_params, null);
-                String key = temp.next();
-                JSONObject value = info.getJSONObject(key);
-                ((TextView) v.findViewById(R.id.paramsName)).setText(value.get("title").toString());
-                ((TextView) v.findViewById(R.id.paramsValue)).setText(value.get("value").toString());
-                dynamicParams.addView(v);
+            if (object.getComplex() != null && !object.getComplex().isEmpty()) {
+                TextView textView = (TextView) view.findViewById(R.id.detailComplex);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(object.getComplex());
             }
 
-            if(i == 0){
-                dynamicParamsBlock.setVisibility(View.GONE);
-            }
-        } catch (JSONException e) {
-            Log.d("testio",e.getMessage());
-        }
+            ((TextView) view.findViewById(R.id.detailAddress)).setText(object.getRegion());
 
-        LinearLayout phonesBlock = (LinearLayout) view.findViewById(R.id.phoneContainerMain);
-        JSONObject phones = object.getPhones();
-        try {
-
-            Iterator<String> temp = phones.keys();
-            while (temp.hasNext()) {
-                View v = inflater.inflate(R.layout.phone, null);
-                String key = temp.next();
-                final String value = phones.getString(key);
-                ((TextView) v.findViewById(R.id.phoneNumber)).setText(value);
-                LinearLayout phoneContainer = (LinearLayout) v.findViewById(R.id.phoneContainer);
-                phoneContainer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + value));
-                        startActivity(intent);
-                    }
-                });
-                phonesBlock.addView(v);
-
+            if (object.getDscription() != null && !object.getDscription().isEmpty()) {
+                TextView textView = (TextView) view.findViewById(R.id.description);
+                LinearLayout block = (LinearLayout) view.findViewById(R.id.descriptionBlock);
+                block.setVisibility(View.VISIBLE);
+                textView.setText(object.getDscription());
             }
 
-        } catch (JSONException e) {
-            Log.d("testio",e.getMessage());
-        }
+            LinearLayout dynamicParams = (LinearLayout) view.findViewById(R.id.dynamicParams);
+            LinearLayout dynamicParamsBlock = (LinearLayout) view.findViewById(R.id.parametres);
 
-        JSONObject images = object.getImages();
-        horizontalList=new ArrayList<>();
-        try {
-            Iterator<String> temp = images.keys();
-            while (temp.hasNext()) {
-                String key = temp.next();
-                JSONObject value = images.getJSONObject(key);
-                horizontalList.add(value.get("little").toString());
-            }
-            imageAmount = horizontalList.size();
-            if(imageAmount == 0){
-                view.findViewById(R.id.imagesContainer).setVisibility(View.GONE);
-            }
+            JSONObject info = object.getInfoJson();
+            try {
 
-        } catch (JSONException e) {
-            Log.d("testio",e.getMessage());
-        }
-        ((BaseFile) getActivity().getApplication()).setImages(images);
-        ((BaseFile) getActivity().getApplication()).setImagesAmount(imageAmount);
-
-
-
-
-        horizontalAdapter=new HorizontalAdapter(horizontalList);
-        horizontalLayoutManagaer
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        horizontal_recycler_view.setLayoutManager(horizontalLayoutManagaer);
-        horizontal_recycler_view.setAdapter(horizontalAdapter);
-
-        horizontal_recycler_view.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if(previusPosition != horizontalLayoutManagaer.findFirstVisibleItemPosition()){
-                    previusPosition = horizontalLayoutManagaer.findFirstVisibleItemPosition();
-                    imageAmountTextView.setText(String.valueOf(previusPosition + 1) + "/" + String.valueOf(imageAmount));
+                Iterator<String> temp = info.keys();
+                int i = 0;
+                while (temp.hasNext()) {
+                    i++;
+                    View v = inflater.inflate(R.layout.object_detail_dynamic_params, null);
+                    String key = temp.next();
+                    JSONObject value = info.getJSONObject(key);
+                    ((TextView) v.findViewById(R.id.paramsName)).setText(value.get("title").toString());
+                    ((TextView) v.findViewById(R.id.paramsValue)).setText(value.get("value").toString());
+                    dynamicParams.addView(v);
                 }
 
-
+                if (i == 0) {
+                    dynamicParamsBlock.setVisibility(View.GONE);
+                }
+            } catch (JSONException e) {
+                Log.d("testio", e.getMessage());
             }
-        });
 
+            LinearLayout phonesBlock = (LinearLayout) view.findViewById(R.id.phoneContainerMain);
+            JSONObject phones = object.getPhones();
+            try {
+
+                Iterator<String> temp = phones.keys();
+                while (temp.hasNext()) {
+                    View v = inflater.inflate(R.layout.phone, null);
+                    String key = temp.next();
+                    final String value = phones.getString(key);
+                    ((TextView) v.findViewById(R.id.phoneNumber)).setText(value);
+                    LinearLayout phoneContainer = (LinearLayout) v.findViewById(R.id.phoneContainer);
+                    phoneContainer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + value));
+                            startActivity(intent);
+                        }
+                    });
+                    phonesBlock.addView(v);
+
+                }
+
+            } catch (JSONException e) {
+                Log.d("testio", e.getMessage());
+            }
+
+            JSONObject images = object.getImages();
+            horizontalList = new ArrayList<>();
+            try {
+                Iterator<String> temp = images.keys();
+                while (temp.hasNext()) {
+                    String key = temp.next();
+                    JSONObject value = images.getJSONObject(key);
+                    horizontalList.add(value.get("little").toString());
+                }
+                imageAmount = horizontalList.size();
+                if (imageAmount == 0) {
+                    view.findViewById(R.id.imagesContainer).setVisibility(View.GONE);
+                }
+
+            } catch (JSONException e) {
+                Log.d("testio", e.getMessage());
+            }
+            ((BaseFile) getActivity().getApplication()).setImages(images);
+            ((BaseFile) getActivity().getApplication()).setImagesAmount(imageAmount);
+
+
+            horizontalAdapter = new HorizontalAdapter(horizontalList);
+            horizontalLayoutManagaer
+                    = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+            horizontal_recycler_view.setLayoutManager(horizontalLayoutManagaer);
+            horizontal_recycler_view.setAdapter(horizontalAdapter);
+
+            horizontal_recycler_view.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (previusPosition != horizontalLayoutManagaer.findFirstVisibleItemPosition()) {
+                        previusPosition = horizontalLayoutManagaer.findFirstVisibleItemPosition();
+                        imageAmountTextView.setText(String.valueOf(previusPosition + 1) + "/" + String.valueOf(imageAmount));
+                    }
+                }
+            });
+        }
     }
 
 

@@ -7,8 +7,10 @@ import android.util.Log;
 
 import com.example.a24814.qzalog.CategoryFragment;
 import com.example.a24814.qzalog.CategoryObjectsFragment;
+import com.example.a24814.qzalog.MapFragment;
 import com.example.a24814.qzalog.ObjectDetailFragment;
 import com.example.a24814.qzalog.models.Category;
+import com.example.a24814.qzalog.models.MapObject;
 import com.example.a24814.qzalog.models.Objects;
 
 import org.json.JSONArray;
@@ -82,24 +84,12 @@ public class Backend {
             @Override
             public String doInBackground(Void... params )
             {
-               // setValue(false);
-
-                //Integer page = ((BaseFile) activity.getApplication()).getPage();
                 String jsonResponse = Helpers.getStringByUrl(url + "&page=" + String.valueOf(page));
-
-               /// Log.d("test", url);
-               // Log.d("test", jsonResponse);
-
                 if(jsonResponse != null){
-                    List<Objects> objects = ((BaseFile) activity.getApplication()).getObjects();
-
-                   // List<Objects> clones = Helpers.copyList(objects);
+                    //List<Objects> objects = ((BaseFile) activity.getApplication()).getObjects();
                     List<Objects> clones = new ArrayList<Objects>();
-
                     try {
                         JSONObject jsonObj = new JSONObject(jsonResponse);
-
-                        // Getting JSON Array node
                         JSONArray objectsArray = jsonObj.getJSONArray("objects");
                         for (int i = 0; i < objectsArray.length(); i++) {
                             JSONObject c = objectsArray.getJSONObject(i);
@@ -110,26 +100,14 @@ public class Backend {
                             String price = c.getString("price");
                             String discount = c.getString("discount");
                             String info = c.getString("info");
-
                             Objects obj = new Objects(id, title, image, region, price, discount, info);
                             clones.add(obj);
-
                         }
-
-
                     } catch (final JSONException e) {
-                       // setValue(true);
                         Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
                     }
                     setValue(clones);
-
-
-                   // ((BaseFile) activity.getApplication()).setObjects(objects);;
-                   // ((BaseFile) activity.getApplication()).setPage(page + 1);
-
                 }
-
-
                 return null;
             }
             @Override
@@ -141,7 +119,7 @@ public class Backend {
 
 
             }
-        };//.execute();
+        };
     }
 
     public static void loadObject(final Context context, final Integer objId, final ObjectDetailFragment fragment){
@@ -151,13 +129,9 @@ public class Backend {
             {
                 String url = Defaults.OBJ_PATH + String.valueOf(objId);
                 String jsonResponse = Helpers.getStringByUrl(url);
-
                 if(jsonResponse != null){
-
                     try {
-
                         JSONObject jsonObj = new JSONObject(jsonResponse);
-                        // Getting JSON Array node
                         JSONObject c = jsonObj.getJSONObject("object");
                         Integer id = c.getInt("id");
                         String title = c.getString("title");
@@ -171,43 +145,73 @@ public class Backend {
                         String infoArray = c.getString("infoArray");
                         String description = c.getString("description");
                         JSONObject phonesObj = new JSONObject(phones);
+                        String coordX = c.getString("coordX");
+                        String coordY = c.getString("coordY");
+                        String zoom = c.getString("zoom");
 
                         Object json = new JSONTokener(images).nextValue();
                         JSONObject imagesObj =  new  JSONObject();
                         if (json instanceof JSONObject)
                            imagesObj = new JSONObject(images);
 
-
                         json = new JSONTokener(infoArray).nextValue();
                         JSONObject infoArrayObj = new  JSONObject();
                         if (json instanceof JSONObject)
                             infoArrayObj = new JSONObject(infoArray);
 
-
-
-                        Objects obj = new Objects(id, title, complex, dateCreated,address, price, discount, phonesObj, imagesObj, infoArrayObj, description);
+                        Objects obj = new Objects(id, title, complex, dateCreated,address, price, discount, phonesObj, imagesObj, infoArrayObj, description, coordX, coordY, zoom);
                         setValue(obj);
                     } catch (final JSONException e) {
-                        // setValue(true);
                         Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
                     }
-
                 }
-
-
                 return null;
             }
             @Override
             public void handleResponse( Objects object )
             {
-
                 super.handleResponse( object );
                 fragment.backendResponse(object);
-
-
             }
         }.execute();
+    }
 
+    public static BackendCallback<List<MapObject>> getMapObjects(final Activity activity, final MapFragment fragment, final String url) {
+        return new BackendCallback<List<MapObject>>(activity, false){
+            @Override
+            public String doInBackground(Void... params )
+            {
+                String jsonResponse = Helpers.getStringByUrl(url);
+                if(jsonResponse != null){
+                    List<MapObject> mapObjects = new ArrayList<MapObject>();
+                    try {
+                        JSONObject jsonObj = new JSONObject(jsonResponse);
+                        JSONArray objectsArray = jsonObj.getJSONArray("objects");
+                        for (int i = 0; i < objectsArray.length(); i++) {
+                            JSONObject c = objectsArray.getJSONObject(i);
+                            Integer id = c.getInt("id");
+                            String coordX = c.getString("coordX");
+                            String coordY = c.getString("coordY");
+
+                            MapObject obj = new MapObject(id, coordX, coordY);
+                            mapObjects.add(obj);
+                        }
+                    } catch (final JSONException e) {
+                        Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
+                    }
+                    setValue(mapObjects);
+                }
+                return null;
+            }
+            @Override
+            public void handleResponse( List<MapObject> mapObjects )
+            {
+                Log.d("testtest", String.valueOf(mapObjects.size()));
+                Log.d("testtest", mapObjects.toString());
+                super.handleResponse( mapObjects );
+                fragment.backendResponse(mapObjects);
+            }
+        };
     }
 
 
