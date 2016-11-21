@@ -16,14 +16,18 @@ public class GalleryActivity extends AppCompatActivity {
 
     private Integer objId;
 
-    private Integer position = 1;
+    private Integer position = 0;
+
+    private Toolbar toolbar;
+
+    private TextView toolbarText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -45,7 +49,8 @@ public class GalleryActivity extends AppCompatActivity {
         }
         Integer imagesAmount = ((BaseFile) getApplication()).getImagesAmount();
 
-        ((TextView)toolbar.findViewById(R.id.toolbar_title)).setText("Изображение " + String.valueOf(position+1) +  "/" + String.valueOf(imagesAmount));
+        toolbarText = (TextView)toolbar.findViewById(R.id.toolbar_title);
+        toolbarText.setText("Изображение " + String.valueOf(position+1) +  "/" + String.valueOf(imagesAmount));
 
     }
 
@@ -65,6 +70,14 @@ public class GalleryActivity extends AppCompatActivity {
             fragmentTransaction.commit();
         }
 
+    }
+
+    public TextView getToolbarText(){
+        return toolbarText;
+    }
+
+    public Integer getPosition(){
+        return position;
     }
 
 }

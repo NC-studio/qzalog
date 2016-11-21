@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
 import com.squareup.picasso.Picasso;
@@ -41,17 +42,22 @@ public class GalleryFragment extends Fragment {
 
     private int previusPosition = 0;
 
+    private TextView toolbarText;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         fragment = this;
-        view = inflater.inflate(R.layout.activity_map,
+        view = inflater.inflate(R.layout.activity_gallery,
                 container, false);
 
         images = ((BaseFile) getActivity().getApplication()).getImages();
         imagesAmount = ((BaseFile) getActivity().getApplication()).getImagesAmount();
+
+        previusPosition = ((GalleryActivity)getActivity()).getPosition();
 
         initView();
 
@@ -68,11 +74,14 @@ public class GalleryFragment extends Fragment {
         } catch (JSONException e) {
             Log.d("testio",e.getMessage());
         }
+        toolbarText = ((GalleryActivity)getActivity()).getToolbarText();
+
         horizontalAdapter=new HorizontalAdapter(horizontalList);
         horizontalLayoutManagaer
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         horizontal_recycler_view.setLayoutManager(horizontalLayoutManagaer);
         horizontal_recycler_view.setAdapter(horizontalAdapter);
+        horizontal_recycler_view.scrollToPosition(previusPosition);
 
         horizontal_recycler_view.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -80,10 +89,8 @@ public class GalleryFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 if(previusPosition != horizontalLayoutManagaer.findFirstVisibleItemPosition()){
                     previusPosition = horizontalLayoutManagaer.findFirstVisibleItemPosition();
-                    //imageAmountTextView.setText(String.valueOf(previusPosition + 1) + "/" + String.valueOf(imageAmount));
+                    toolbarText.setText("Изображение " + String.valueOf(previusPosition + 1) +  "/" + String.valueOf(imagesAmount));
                 }
-
-
             }
         });
 
