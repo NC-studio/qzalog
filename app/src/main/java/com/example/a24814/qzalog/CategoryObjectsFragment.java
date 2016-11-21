@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -178,7 +177,7 @@ public class CategoryObjectsFragment extends Fragment {
     private static class ViewHolder {
         TextView title;
         ImageView img;
-        ProgressBar progress;
+       // ProgressBar progress;
 
         TextView region;
         TextView price;
@@ -201,7 +200,6 @@ public class CategoryObjectsFragment extends Fragment {
             this.data = data;
         }
 
-
         public View getView(int position, View convertView, ViewGroup parent)
         {
             final ViewHolder holder;
@@ -209,9 +207,11 @@ public class CategoryObjectsFragment extends Fragment {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(getContext()).inflate(layoutResourceId, parent, false);
 
-                holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.img = (ImageView) convertView.findViewById(R.id.objectImage);
-                holder.progress = (ProgressBar)  convertView.findViewById(R.id.progress);
+               // holder.progress = (ProgressBar)  convertView.findViewById(R.id.progress);
+                holder.title = (TextView) convertView.findViewById(R.id.title);
+
+
                 holder.region = (TextView) convertView.findViewById(R.id.address);
                 holder.price = (TextView) convertView.findViewById(R.id.price);
                 holder.discount = (TextView) convertView.findViewById(R.id.discount);
@@ -223,27 +223,22 @@ public class CategoryObjectsFragment extends Fragment {
 
             Objects object = getItem(position);
 
-
-            //String image_url = object.getImgUrl();
-           // if (holder.img.getTag() == null || !holder.img.getTag().equals(image_url)) {
-            holder.progress.setVisibility(View.VISIBLE);
+            //holder.progress.setVisibility(View.VISIBLE);
             Picasso.with(getActivity())
                     .load(object.getImgUrl())
                     .tag("image")
-                    .placeholder( R.drawable.trick )
-                    .into(holder.img, new com.squareup.picasso.Callback() {
+                    .placeholder(R.drawable.trick )
+                    .into(holder.img);
+                    /*.into(holder.img, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
-                            holder.progress.setVisibility(View.GONE);
+                           // holder.progress.setVisibility(View.GONE);
                         }
                         @Override
                         public void onError() {
                         }
-                    });
+                    });*/
 
-           // holder.img.setTag("image");
-              //  holder.img.setTag(image_url);
-           // }
             holder.title.setText(object.getName());
             holder.region.setText(object.getRegion());
             holder.price.setText(object.getPrice());
