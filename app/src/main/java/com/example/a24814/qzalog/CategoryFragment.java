@@ -68,7 +68,7 @@ public class CategoryFragment extends Fragment {
                                     long arg3) {
                 try {
                     Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                    intent.putExtra("categoryId", arg2);
+                    intent.putExtra("category", arg2);
                     startActivity(intent);
                 } catch ( IndexOutOfBoundsException e ) {
                     Log.d(TAG, e.getMessage());

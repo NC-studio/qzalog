@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".components.BaseFile"
@@ -36,7 +37,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ListActivity" />
         <activity android:name=".ObjectDetailActivity" />
-        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".MapActivity" />
+        <activity android:name=".GalleryActivity"></activity>
     </application>
 
 </manifest>

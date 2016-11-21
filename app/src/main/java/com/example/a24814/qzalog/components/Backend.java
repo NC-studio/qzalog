@@ -14,6 +14,7 @@ import com.example.a24814.qzalog.models.Objects;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,17 +111,10 @@ public class Backend {
                             String discount = c.getString("discount");
                             String info = c.getString("info");
 
-
-
                             Objects obj = new Objects(id, title, image, region, price, discount, info);
                             clones.add(obj);
 
                         }
-                        //if(objectsArray.length() < 10){
-                               //setValue(true);
-                       // }
-
-
 
 
                     } catch (final JSONException e) {
@@ -161,6 +155,7 @@ public class Backend {
                 if(jsonResponse != null){
 
                     try {
+
                         JSONObject jsonObj = new JSONObject(jsonResponse);
                         // Getting JSON Array node
                         JSONObject c = jsonObj.getJSONObject("object");
@@ -176,8 +171,19 @@ public class Backend {
                         String infoArray = c.getString("infoArray");
                         String description = c.getString("description");
                         JSONObject phonesObj = new JSONObject(phones);
-                        JSONObject imagesObj = new JSONObject(images);
-                        JSONObject infoArrayObj = new JSONObject(infoArray);
+
+                        Object json = new JSONTokener(images).nextValue();
+                        JSONObject imagesObj =  new  JSONObject();
+                        if (json instanceof JSONObject)
+                           imagesObj = new JSONObject(images);
+
+
+                        json = new JSONTokener(infoArray).nextValue();
+                        JSONObject infoArrayObj = new  JSONObject();
+                        if (json instanceof JSONObject)
+                            infoArrayObj = new JSONObject(infoArray);
+
+
 
                         Objects obj = new Objects(id, title, complex, dateCreated,address, price, discount, phonesObj, imagesObj, infoArrayObj, description);
                         setValue(obj);
@@ -185,8 +191,6 @@ public class Backend {
                         // setValue(true);
                         Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
                     }
-
-
 
                 }
 

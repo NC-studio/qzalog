@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="20dp"
+    android:paddingBottom="8dp"
     android:background="@color/whiteGrey"
     tools:context="com.example.a24814.qzalog.ObjectDetailActivity">
 
@@ -12,10 +12,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">
-
-
         <RelativeLayout
-
             android:id="@+id/loader"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
@@ -25,7 +22,6 @@
                 android:layout_height="40dp"
                 android:layout_width="40dp"
                 android:id="@+id/ctrlActivityIndicator"/>
-
         </RelativeLayout>
 
         <LinearLayout
@@ -33,18 +29,28 @@
             android:visibility="gone"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:background="@color/white"
             android:layout_height="match_parent">
-            <ImageView
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:src="@drawable/test"
-                android:id="@+id/objectImage"
+            <RelativeLayout
+                android:id="@+id/imagesContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/horizontal_recycler_view"
+                    android:background="#fff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:text="1/5"
+                    android:textColor="@color/white"
+                    android:id="@+id/imageAmount"
+                    android:background="@color/blueImageNumber"
+                    android:layout_alignRight="@+id/horizontal_recycler_view"
+                    android:layout_alignBottom="@+id/horizontal_recycler_view"
+                    android:padding="3dp"
+                    android:textSize="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -53,7 +59,6 @@
                 android:paddingRight="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <TextView
                     android:visibility="gone"
                     android:background="@drawable/strikeout_grey"
@@ -62,17 +67,13 @@
                     android:textAppearance="@style/ObjectDiscount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/icon"
-                    />
-
+                    android:layout_toRightOf="@id/icon"/>
                 <TextView
                     android:id="@+id/price"
                     android:textAppearance="@style/ObjectPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/icon"/>
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +84,6 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <TextView
                     android:layout_marginBottom="5dp"
                     android:layout_alignParentRight="true"
@@ -92,27 +92,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/icon"/>
-
                 <TextView
                     android:textAppearance="@style/objectDetailTitle"
                     android:id="@+id/detailTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
                 <TextView
+                    android:visibility="gone"
                     android:layout_marginTop="0dp"
                     android:textAppearance="@style/objectDetailComplex"
                     android:id="@+id/detailComplex"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
                 <TextView
                     android:layout_marginTop="0dp"
                     android:textAppearance="@style/objectDetailAddress"
                     android:id="@+id/detailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -125,65 +122,33 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <TextView
                     android:textAppearance="@style/objectDetailTitle"
                     android:text="Основные параметры"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
-                <FrameLayout
-                    android:layout_marginTop="5dp"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:id="@+id/dynamicParams"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_alignParentLeft="true"
-                            android:textAppearance="@style/paramsName"
-                            android:layout_width="0dp"
-                            android:layout_weight=".50"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:gravity="right"
-                            android:layout_alignParentRight="true"
-                            android:textAppearance="@style/paramsValue"
-                            android:layout_width="0dp"
-                            android:layout_weight=".50"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
-
                 android:background="@drawable/border_top"
                 android:id="@+id/descriptionBlock"
-                android:paddingTop="20dp"
+                android:paddingTop="8dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <TextView
                     android:textAppearance="@style/objectDetailTitle"
                     android:text="Описание"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
                 <TextView
                     android:id="@+id/description"
                     android:layout_marginTop="4dp"
@@ -191,37 +156,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
-
             <LinearLayout
-                android:layout_marginTop="14dp"
                 android:orientation="vertical"
+                android:id="@+id/phoneContainerMain"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:layout_margin="8dp"
-                    android:padding="10dp"
-                    android:orientation="vertical"
-                    android:background="@color/green"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/phoneNumber"
-                        android:layout_centerInParent="true"
-                        android:textColor="@color/white"
-                        android:text="+7 701 880 7070"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </RelativeLayout>
-
-            </LinearLayout>
-
+                android:layout_height="wrap_content"/>
         </LinearLayout>
-
-
-
-
-
     </LinearLayout>
 </ScrollView>

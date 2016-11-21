@@ -1,7 +1,6 @@
 package com.example.a24814.qzalog.components;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.a24814.qzalog.models.Category;
 import com.example.a24814.qzalog.models.Form;
@@ -30,14 +29,9 @@ public class BaseFile extends Application {
 
     private List<Objects> objectList = new ArrayList<Objects>();
 
- //   private Integer objectsNumber = 0;
+    private JSONObject images = new  JSONObject();
 
-
-
-
-   // public Integer getObjectsNumber(){return this.objectsNumber;}
-
-   // public void setObjectsNumber(Integer objectsNumber){this.objectsNumber = objectsNumber;}
+    private Integer imagesAmount = 1;
 
     public List<Category> getCategories() {
         return this.cagegoryList;
@@ -89,13 +83,31 @@ public class BaseFile extends Application {
     public void setFormHistory(){
         this.formHistory =  new ArrayList<FormHistory>();
         addToFormHistory();
-        Log.d("testtest", "setted");
     }
 
     public void addToFormHistory(){
         FormHistory formHistoryObj = new FormHistory(getUrl(), getFields(), getFormRegion());
         formHistory.add(formHistoryObj);
     }
+
+    public JSONObject getImages() {
+        return this.images;
+    }
+
+    public void setImages(JSONObject images) {
+        this.images = images;
+    }
+
+    public Integer getImagesAmount() {
+        return this.imagesAmount;
+    }
+
+    public void setImagesAmount(Integer imagesAmount) {
+        this.imagesAmount = imagesAmount;
+    }
+
+
+
 
 
 

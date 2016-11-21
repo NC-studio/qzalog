@@ -178,12 +178,10 @@ public class CategoryObjectsFragment extends Fragment {
         TextView title;
         ImageView img;
        // ProgressBar progress;
-
         TextView region;
         TextView price;
         TextView discount;
         TextView info;
-
     }
 
     public class ObjectAdapter extends ArrayAdapter<Objects>
@@ -192,8 +190,7 @@ public class CategoryObjectsFragment extends Fragment {
         int layoutResourceId;
         List<Objects> data = null;
 
-
-        public  ObjectAdapter(Context context, int layoutResourceId, List<Objects> data) {
+        public ObjectAdapter(Context context, int layoutResourceId, List<Objects> data) {
             super(context, layoutResourceId, data);
             this.layoutResourceId = layoutResourceId;
             this.context = context;
@@ -206,12 +203,9 @@ public class CategoryObjectsFragment extends Fragment {
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(getContext()).inflate(layoutResourceId, parent, false);
-
                 holder.img = (ImageView) convertView.findViewById(R.id.objectImage);
                // holder.progress = (ProgressBar)  convertView.findViewById(R.id.progress);
                 holder.title = (TextView) convertView.findViewById(R.id.title);
-
-
                 holder.region = (TextView) convertView.findViewById(R.id.address);
                 holder.price = (TextView) convertView.findViewById(R.id.price);
                 holder.discount = (TextView) convertView.findViewById(R.id.discount);
