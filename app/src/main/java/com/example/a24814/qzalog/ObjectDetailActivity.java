@@ -22,7 +22,11 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
 
     private Context _context;
 
+    private Integer objId;
 
+    MenuItem mapIcon;
+
+    MenuItem likeIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,13 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
                 finish();
             }
         });
+
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            objId = extras.getInt("objId");
+        }
+
 
     }
 
@@ -71,11 +82,9 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
         super.onCreateOptionsMenu(menu);
 
         getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.action_map);
-        if(item != null) {
-            item.setVisible(true);
-            //item.setActionView(R.layout.toolbar_textview);
-        }
+        mapIcon = menu.findItem(R.id.action_map);
+        likeIcon = menu.findItem(R.id.action_like);
+
         return true;
     }
 
@@ -101,6 +110,17 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
         return false;
     }
 
+    public Integer getObjId(){
+        return objId;
+    }
+
+    public MenuItem getMapIcon(){
+        return mapIcon;
+    }
+
+    public MenuItem getLikeIcon(){
+        return likeIcon;
+    }
 
 
 }

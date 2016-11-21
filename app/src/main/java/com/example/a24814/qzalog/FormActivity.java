@@ -36,13 +36,20 @@ public class FormActivity extends AppCompatActivity {
 
     private List<Form> fields = new ArrayList<Form>();
 
+    private View view;
+
+    FrameLayout flContent;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
+
 
 
 
@@ -98,7 +105,7 @@ public class FormActivity extends AppCompatActivity {
     }
 
     private void initFragment(Bundle savedInstanceState){
-        FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
+        flContent = (FrameLayout) findViewById(R.id.flContent);
         if (savedInstanceState == null) {
             Fragment newFragment = new FormFragment();
 
@@ -130,6 +137,28 @@ public class FormActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_cancel) {
+
+            FormFragment fragment = (FormFragment) getSupportFragmentManager().findFragmentById(R.id.flContent);
+            fragment.clearForm();
+
+
+          /*  ViewGroup group = (ViewGroup)findViewById(R.id.flContent);
+            Log.d("testio", String.valueOf(group.getChildCount()));
+
+            ArrayList<EditText> EditTextList = new ArrayList<EditText>();
+
+            for( int i = 0; i < flContent.getChildCount(); i++ ) {
+
+                Log.d("testio", flContent.getChildAt(i).toString());
+                if (flContent.getChildAt(i) instanceof EditText) {
+
+                    ((EditText) flContent.getChildAt(i)).setText("");
+                }
+
+            }
+*/
+
+
             return true;
         }
 
@@ -146,6 +175,10 @@ public class FormActivity extends AppCompatActivity {
 
     public List<Form> getFields() {
         return fields;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     /*public void setClearedHistory(Boolean clearedHistory){

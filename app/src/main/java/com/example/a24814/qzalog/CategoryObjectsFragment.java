@@ -13,9 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.Backend;
+import com.example.a24814.qzalog.components.BackendCallback;
 import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.models.Objects;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -40,6 +42,8 @@ public class CategoryObjectsFragment extends Fragment {
 
     private View view;
 
+    private RelativeLayout noFoundBlock;
+
     private ArrayAdapter<Objects> adapter;
 
     private ImageLoader imageLoader;
@@ -57,6 +61,8 @@ public class CategoryObjectsFragment extends Fragment {
     private Integer page = 1;
 
     private Integer objNumber = 0;
+
+    private BackendCallback<List<Objects>> backendAsync;
 
 
 
@@ -86,6 +92,13 @@ public class CategoryObjectsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onPause() {
+        if(backendAsync != null){
+            backendAsync.cancel(true);
+        }
+        super.onPause();
+    }
 
 
 
@@ -94,6 +107,7 @@ public class CategoryObjectsFragment extends Fragment {
         final LayoutInflater factory = getActivity().getLayoutInflater();
         loadingFooter = factory.inflate(R.layout.list_loader, null);
         objectsList.addFooterView(loadingFooter);
+        noFoundBlock = (RelativeLayout) view.findViewById(R.id.noFoundBlock);
     }
 
 
@@ -109,20 +123,23 @@ public class CategoryObjectsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
                                     long arg3) {
+                backendAsync.cancel(true);
                 Objects obj = objects.get(arg2);
+
                 Intent intent = new Intent(getActivity(), ObjectDetailActivity.class);
                 intent.putExtra("objId", obj.getId());
                 startActivity(intent);
             }
         });
         isLoading = true;
-        Backend.getObjects(getActivity(), fragment, urlRequest, page);
+        backendAsync =  Backend.getObjects(getActivity(), fragment, urlRequest, page);
+        backendAsync.execute();
 
     }
 
     public class SampleScrollListener implements AbsListView.OnScrollListener {
         private final Context context;
-        private final Object scrollTag = new Object(); // this can be static or not, depending what u want to achieve
+       // private final Object scrollTag = new Object(); // this can be static or not, depending what u want to achieve
 
         public SampleScrollListener(Context context) {
             this.context = context;
@@ -132,9 +149,9 @@ public class CategoryObjectsFragment extends Fragment {
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             final Picasso picasso = Picasso.with(context);
             if (scrollState == SCROLL_STATE_IDLE || scrollState == SCROLL_STATE_TOUCH_SCROLL) {
-                picasso.resumeTag(scrollTag);
+                picasso.resumeTag("image");
             } else {
-                picasso.pauseTag(scrollTag);
+                picasso.pauseTag("image");
             }
         }
 
@@ -147,11 +164,14 @@ public class CategoryObjectsFragment extends Fragment {
                     isLoading = true;
                     loadingFooter.setVisibility(View.VISIBLE);
 
-                    Backend.getObjects(getActivity(), fragment, urlRequest, page);
+                    backendAsync = Backend.getObjects(getActivity(), fragment, urlRequest, page);
+                    backendAsync.execute();
                 }
             }
         }
     }
+
+
 
 
 
@@ -185,7 +205,6 @@ public class CategoryObjectsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent)
         {
             final ViewHolder holder;
-
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(getContext()).inflate(layoutResourceId, parent, false);
@@ -193,12 +212,10 @@ public class CategoryObjectsFragment extends Fragment {
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.img = (ImageView) convertView.findViewById(R.id.objectImage);
                 holder.progress = (ProgressBar)  convertView.findViewById(R.id.progress);
-
                 holder.region = (TextView) convertView.findViewById(R.id.address);
                 holder.price = (TextView) convertView.findViewById(R.id.price);
+                holder.discount = (TextView) convertView.findViewById(R.id.discount);
                 holder.info = (TextView) convertView.findViewById(R.id.additionalInfo);
-
-
                 convertView.setTag(holder);
             }else {
                 holder = (ViewHolder) convertView.getTag();
@@ -206,33 +223,33 @@ public class CategoryObjectsFragment extends Fragment {
 
             Objects object = getItem(position);
 
-            String image_url = object.getImgUrl();
 
-            if (holder.img.getTag() == null || !holder.img.getTag().equals(image_url)) {
-                holder.progress.setVisibility(View.VISIBLE);
-                Picasso.with(getActivity())
-                        .load(object.getImgUrl())
-                        .into(holder.img, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                holder.progress.setVisibility(View.GONE);
-                            }
+            //String image_url = object.getImgUrl();
+           // if (holder.img.getTag() == null || !holder.img.getTag().equals(image_url)) {
+            holder.progress.setVisibility(View.VISIBLE);
+            Picasso.with(getActivity())
+                    .load(object.getImgUrl())
+                    .tag("image")
+                    .placeholder( R.drawable.trick )
+                    .into(holder.img, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.progress.setVisibility(View.GONE);
+                        }
+                        @Override
+                        public void onError() {
+                        }
+                    });
 
-                            @Override
-                            public void onError() {
-
-                            }
-                        });
-                holder.img.setTag(image_url);
-            }
+           // holder.img.setTag("image");
+              //  holder.img.setTag(image_url);
+           // }
             holder.title.setText(object.getName());
             holder.region.setText(object.getRegion());
             holder.price.setText(object.getPrice());
             holder.info.setText(object.getInfo());
-
-
-
-
+            holder.discount.setText(object.getDiscount());
+            holder.discount.setVisibility(object.getVisibility());
 
 
             return convertView;
@@ -248,24 +265,25 @@ public class CategoryObjectsFragment extends Fragment {
         }
         adapter.notifyDataSetChanged();
         objectsList.requestLayout();
-        ((BaseFile) getActivity().getApplication()).setObjects(objects);
+        if(objects != null) {
+            ((BaseFile) getActivity().getApplication()).setObjects(objects);
 
 
-        if(clones.size() % 10 > 0 || objNumber == objects.size()){
-            this.isUploaded = true;
-            objectsList.removeFooterView(loadingFooter);
-        }else{
-            objNumber = objects.size();
+            if (clones.size() % 10 > 0 || objNumber == objects.size()) {
+                if (objects.size() == 0) {
+                    noFoundBlock.setVisibility(View.VISIBLE);
+                    objectsList.setVisibility(View.GONE);
+                }
+                this.isUploaded = true;
+                objectsList.removeFooterView(loadingFooter);
+            } else {
+                objNumber = objects.size();
+            }
         }
 
         isLoading = false;
-
         //List<Objects> objects1 = ((BaseFile) getActivity().getApplication()).getObjects();
-
        // objects =  ((BaseFile) getActivity().getApplication()).getObjects();
-
-
-
     }
 
 

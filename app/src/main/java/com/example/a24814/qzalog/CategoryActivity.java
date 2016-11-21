@@ -73,6 +73,13 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+
+
+        super.onResume();
+    }
+
 
 
 
@@ -100,6 +107,10 @@ public class CategoryActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.action_search);
         if(item != null) {
             item.setVisible(true);
+
+            //DrawableCompat.setTint(item.getIcon(), ContextCompat.getColor(this, R.color.white));
+
+
         }
         return true;
     }

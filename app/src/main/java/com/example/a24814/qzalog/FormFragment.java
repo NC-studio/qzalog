@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
@@ -102,6 +104,7 @@ public class FormFragment extends Fragment {
 
                 ((BaseFile) getActivity().getApplication()).addToFormHistory();
                 Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                intent.putExtra("categoryId", ((FormActivity)getActivity()).getCategory().getObjectId());
                 startActivity(intent);
 
 
@@ -247,8 +250,8 @@ public class FormFragment extends Fragment {
                 FromCreator fromCreator = new FromCreator(getActivity(), field);
                 View v = fromCreator.createField();
                 formFields.addView(v);
+                field.setView(v);
             }
-
 
             ((BaseFile) getActivity().getApplication()).setFields(fields);
         }catch (Throwable t) {
@@ -262,6 +265,7 @@ public class FormFragment extends Fragment {
             FromCreator fromCreator = new FromCreator(getActivity(), field);
             View v = fromCreator.createField();
             formFields.addView(v);
+            field.setView(v);
         }
     }
 
@@ -295,7 +299,36 @@ public class FormFragment extends Fragment {
         return url;
     }
 
+    public void clearForm(){
+        for (Form field : fields) {
+            if(field.getSelectedValue() != null){
+                View v = field.getView();
+                field.setSelectedValue(null);
+                if(field.getType() == 1){
+                    ((EditText) v.findViewById(R.id.field1)).setText("");
+                    ((EditText) v.findViewById(R.id.field2)).setText("");
+                }else{
+                    ((Spinner) v.findViewById(R.id.spinnerForm)).setSelection(0);
+                }
+            }
+        }
 
+        JSONObject formRegion = ((BaseFile) getActivity().getApplication()).getFormRegion();
+        try {
+            String regionIdValue = formRegion.getString("id");
+            if (regionIdValue != null) {
+                formRegion = new JSONObject();
+                ((BaseFile) getActivity().getApplication()).setFormRegion(formRegion);
+                regionId = null;
+                ((TextView) view.findViewById(R.id.regionText)).setText(getResources().getString(R.string.form_default));
+            }
+
+        }catch (Exception e){
+            Log.d(TAG, e.getMessage());
+        }
+
+
+    }
 
 
 }

@@ -30,18 +30,10 @@ public class CategoryFragment extends Fragment {
 
     private ListView categoryList;
 
-    //private View loadingFooter;
-
     private View view;
 
     private ArrayAdapter<Category> adapter;
 
-
-
-
-   // private ImageLoader imageLoader;
-
-   // private DisplayImageOptions options;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,19 +42,12 @@ public class CategoryFragment extends Fragment {
                 container, false);
 
         initView();
+        initAdapter();
 
         return view;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-
-
-       // initImageLoader();
-        initAdapter();
-    }
 
     private void initView(){
         categoryList = (ListView) view.findViewById(R.id.categorylist);
@@ -76,7 +61,6 @@ public class CategoryFragment extends Fragment {
 
         adapter = new CategoryAdapter(getActivity(), R.layout.category_item, categories);
         categoryList.setAdapter(adapter);
-       // categoryList.addFooterView(loadingFooter);
 
         categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -98,8 +82,6 @@ public class CategoryFragment extends Fragment {
         TextView name;
         TextView amount;
         ImageView icon;
-       // Integer position;
-
     }
 
     public class CategoryAdapter extends ArrayAdapter<Category>
@@ -120,7 +102,6 @@ public class CategoryFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent)
         {
             final ViewHolder holder;
-            int listViewItemType = getItemViewType(position);
 
             if (convertView == null) {
                 holder = new ViewHolder();

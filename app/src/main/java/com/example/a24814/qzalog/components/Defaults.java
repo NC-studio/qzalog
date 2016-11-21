@@ -6,6 +6,7 @@ public class Defaults
 
     public static final String CATEGORY_PATH = SITE_PATH + "_mobile_objects" ;
 
+    public static final String OBJ_PATH = SITE_PATH + "_mobile_detail?object_id=";
 
 
 }

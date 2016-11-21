@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.a24814.qzalog.CategoryFragment;
 import com.example.a24814.qzalog.CategoryObjectsFragment;
+import com.example.a24814.qzalog.ObjectDetailFragment;
 import com.example.a24814.qzalog.models.Category;
 import com.example.a24814.qzalog.models.Objects;
 
@@ -74,9 +75,9 @@ public class Backend {
         }.execute();
     }
 
-    public static void getObjects(final Activity activity, final CategoryObjectsFragment fragment, final String url, final Integer page) {
+    public static BackendCallback<List<Objects>> getObjects(final Activity activity, final CategoryObjectsFragment fragment, final String url, final Integer page) {
 
-        new BackendCallback<List<Objects>>(activity, false){
+        return new BackendCallback<List<Objects>>(activity, false){
             @Override
             public String doInBackground(Void... params )
             {
@@ -146,9 +147,64 @@ public class Backend {
 
 
             }
-        }.execute();
+        };//.execute();
     }
 
+    public static void loadObject(final Context context, final Integer objId, final ObjectDetailFragment fragment){
+        new BackendCallback<Objects>(context, false){
+            @Override
+            public String doInBackground(Void... params )
+            {
+                String url = Defaults.OBJ_PATH + String.valueOf(objId);
+                String jsonResponse = Helpers.getStringByUrl(url);
+
+                if(jsonResponse != null){
+
+                    try {
+                        JSONObject jsonObj = new JSONObject(jsonResponse);
+                        // Getting JSON Array node
+                        JSONObject c = jsonObj.getJSONObject("object");
+                        Integer id = c.getInt("id");
+                        String title = c.getString("title");
+                        String complex = c.getString("complex");
+                        String dateCreated = c.getString("dateCreated");
+                        String address = c.getString("address");
+                        String price = c.getString("price");
+                        String discount = c.getString("discount");
+                        String phones = c.getString("phones");
+                        String images = c.getString("images");
+                        String infoArray = c.getString("infoArray");
+                        String description = c.getString("description");
+                        JSONObject phonesObj = new JSONObject(phones);
+                        JSONObject imagesObj = new JSONObject(images);
+                        JSONObject infoArrayObj = new JSONObject(infoArray);
+
+                        Objects obj = new Objects(id, title, complex, dateCreated,address, price, discount, phonesObj, imagesObj, infoArrayObj, description);
+                        setValue(obj);
+                    } catch (final JSONException e) {
+                        // setValue(true);
+                        Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
+                    }
+
+
+
+                }
+
+
+                return null;
+            }
+            @Override
+            public void handleResponse( Objects object )
+            {
+
+                super.handleResponse( object );
+                fragment.backendResponse(object);
+
+
+            }
+        }.execute();
+
+    }
 
 
 
