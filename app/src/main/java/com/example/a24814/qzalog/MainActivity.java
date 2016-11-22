@@ -1,17 +1,18 @@
 package com.example.a24814.qzalog;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -33,37 +34,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private DataBaseAdapter dbHelper;
 
+    private  Toolbar toolbar;
 
+    private DrawerLayout drawer;
 
+    private ActionBarDrawerToggle toggle;
+
+    private Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar,  R.string.drawer_open,  R.string.drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
         //initDataBase();
-
         initFragment(savedInstanceState);
 
         //init data base
         initDataBase();
 
         //init goole map
-
         Runnable r = new Runnable() {
             public void run() {
                 try {
@@ -71,33 +69,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 MapView mapView = new MapView(MainActivity.this);
                 mapView.onCreate(null);
             }
         };
+
+        NavigationView n = (NavigationView) findViewById(R.id.nav_view);
+        n.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_liked:
+                        Intent intent = new Intent(activity, LikedObjectsActivity.class);
+                        startActivity(intent);
+                        return true;
+                }
+                drawer.closeDrawers();
+                return true;
+            }
+        });
     }
-
-
 
     private void initFragment(Bundle savedInstanceState){
         flContent = (FrameLayout) findViewById(R.id.flContent);
         if (savedInstanceState == null) {
-
             Fragment newFragment = new CategoryFragment();
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
-           // fragmentTransaction.replace(android.R.id.content, newFragment);
-
             fragmentTransaction.add(R.id.flContent, newFragment);
-
             fragmentTransaction.commit();
         }
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,28 +111,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);  // OPEN DRAWER
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Log.d("test", String.valueOf(id));
-        Log.d("test", String.valueOf(R.id.nav_liked));
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.nav_liked) {
-            Intent intent = new Intent(this, LikedObjectsActivity.class);
-            startActivity(intent);
 
-            return true;
-        }
-        return false;
+        return true;
     }
 
     private void initDataBase(){
