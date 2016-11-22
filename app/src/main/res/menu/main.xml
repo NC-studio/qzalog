@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_map"
         android:orderInCategory="198"
-        android:title="Map"
+        android:title="Карта"
         android:icon="@drawable/ic_pin"
         android:visible="false"
         app:showAsAction="ifRoom"
@@ -14,7 +14,7 @@
     <item
         android:id="@+id/action_like"
         android:orderInCategory="199"
-        android:title="Like"
+        android:title="Избранное"
         android:icon="@drawable/ic_star"
         android:visible="false"
         app:showAsAction="ifRoom"
@@ -24,7 +24,7 @@
         android:tint="@color/white"
         android:id="@+id/action_search"
         android:orderInCategory="200"
-        android:title="Search"
+        android:title="Поиск"
         android:icon="@drawable/ic_search"
         android:visible="false"
         app:showAsAction="ifRoom"

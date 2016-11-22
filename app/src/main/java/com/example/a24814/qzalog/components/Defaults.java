@@ -8,6 +8,9 @@ public class Defaults
 
     public static final String OBJ_PATH = SITE_PATH + "_mobile_detail?object_id=";
 
+    public static final String SELECTED_OBJ_PATH = SITE_PATH + "_mobile_selected_objects";
+
+
 
 }
 

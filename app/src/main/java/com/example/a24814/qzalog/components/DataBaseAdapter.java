@@ -1,6 +1,7 @@
 package com.example.a24814.qzalog.components;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -128,6 +129,42 @@ public class DataBaseAdapter {
         return null;
     }
 
+    public Boolean manageLiked(Integer objectId) {
+        final String TABLE_NAME = "liked";
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE object_id = " + objectId;
+        Cursor cursor      = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            try {
+                db.delete(TABLE_NAME, "object_id = " + String.valueOf(objectId), null);
+
+            } catch (Throwable t) {
+                Log.d(TAG, t.getMessage());
+            }
+            return false;
+        }else{
+            ContentValues values = new ContentValues();
+            values.put("object_id", objectId); // Contact Name
+            db.insert(TABLE_NAME, null, values);
+            return true;
+        }
+
+
+    }
+
+    public Boolean getLiked(Integer objectId) {
+        final String TABLE_NAME = "liked";
+
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE object_id = " + objectId;
+        Cursor cursor      = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            return true;
+        }
+        return false;
+    }
 
 
 }

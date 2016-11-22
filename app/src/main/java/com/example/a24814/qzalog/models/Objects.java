@@ -1,6 +1,7 @@
 package com.example.a24814.qzalog.models;
 
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.view.View;
 
@@ -52,11 +53,15 @@ public class Objects{
 
     private String zoom;
 
+    private Drawable likerIcon;
+
+    private Boolean liked;
+
     public Objects(){
         super();
     }
 
-    public Objects(Integer id, String name, String url, String region, String price, String discount, String info) {
+    public Objects(Integer id, String name, String url, String region, String price, String discount, String info, Drawable likerIcon, Boolean liked) {
         super();
         this.id = id;
         this.name = name;
@@ -68,9 +73,14 @@ public class Objects{
         if(!this.discount.isEmpty()){
             visibility = View.VISIBLE;
         }
+        this.likerIcon = likerIcon;
+        this.liked = liked;
+
+
+
     }
 
-    public Objects(Integer id, String name, String complex, String dateCreated, String address, String price, String discount, JSONObject phones, JSONObject images, JSONObject infoArray, String description, String coordX, String coordY, String zoom) {
+    public Objects(Integer id, String name, String complex, String dateCreated, String address, String price, String discount, JSONObject phones, JSONObject images, JSONObject infoArray, String description, String coordX, String coordY, String zoom, Boolean liked) {
         super();
         this.id = id;
         this.name = name;
@@ -88,6 +98,7 @@ public class Objects{
         this.coordX = coordX;
         this.coordY = coordY;
         this.zoom = zoom;
+        this.liked = liked;
     }
 
     public @Visibility int getVisibility() {
@@ -173,6 +184,22 @@ public class Objects{
     public String getZoom()
     {
         return zoom;
+    }
+
+    public Drawable getLikerIcon(){
+        return likerIcon;
+    }
+
+    public void setLikerIcon(Drawable icon){
+         this.likerIcon = icon;
+    }
+
+    public Boolean getLiked(){
+        return liked;
+    }
+
+    public void setLiked(Boolean liked){
+        this.liked = liked;
     }
 
 

@@ -3,14 +3,18 @@ package com.example.a24814.qzalog.components;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.example.a24814.qzalog.CategoryFragment;
 import com.example.a24814.qzalog.CategoryObjectsFragment;
 import com.example.a24814.qzalog.MapFragment;
 import com.example.a24814.qzalog.ObjectDetailFragment;
+import com.example.a24814.qzalog.R;
+import com.example.a24814.qzalog.SelectedObjectsFragment;
 import com.example.a24814.qzalog.models.Category;
 import com.example.a24814.qzalog.models.MapObject;
+import com.example.a24814.qzalog.models.MapProperty;
 import com.example.a24814.qzalog.models.Objects;
 
 import org.json.JSONArray;
@@ -79,7 +83,6 @@ public class Backend {
     }
 
     public static BackendCallback<List<Objects>> getObjects(final Activity activity, final CategoryObjectsFragment fragment, final String url, final Integer page) {
-
         return new BackendCallback<List<Objects>>(activity, false){
             @Override
             public String doInBackground(Void... params )
@@ -91,6 +94,7 @@ public class Backend {
                     try {
                         JSONObject jsonObj = new JSONObject(jsonResponse);
                         JSONArray objectsArray = jsonObj.getJSONArray("objects");
+                        DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(activity, true);
                         for (int i = 0; i < objectsArray.length(); i++) {
                             JSONObject c = objectsArray.getJSONObject(i);
                             Integer id = c.getInt("id");
@@ -100,9 +104,19 @@ public class Backend {
                             String price = c.getString("price");
                             String discount = c.getString("discount");
                             String info = c.getString("info");
-                            Objects obj = new Objects(id, title, image, region, price, discount, info);
+
+                            Boolean isLiked = myDatabaseHelper.getLiked(id);
+                            Drawable d;
+                            if(isLiked){
+                                d = activity.getResources().getDrawable(R.drawable.ic_liked_active);
+                            }else{
+                                d = activity.getResources().getDrawable(R.drawable.ic_liked);
+                            }
+
+                            Objects obj = new Objects(id, title, image, region, price, discount, info, d, isLiked);
                             clones.add(obj);
                         }
+                        myDatabaseHelper.close();
                     } catch (final JSONException e) {
                         Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
                     }
@@ -122,7 +136,7 @@ public class Backend {
         };
     }
 
-    public static void loadObject(final Context context, final Integer objId, final ObjectDetailFragment fragment){
+    public static void loadObject(final Activity context, final Integer objId, final ObjectDetailFragment fragment){
         new BackendCallback<Objects>(context, false){
             @Override
             public String doInBackground(Void... params )
@@ -149,6 +163,7 @@ public class Backend {
                         String coordY = c.getString("coordY");
                         String zoom = c.getString("zoom");
 
+
                         Object json = new JSONTokener(images).nextValue();
                         JSONObject imagesObj =  new  JSONObject();
                         if (json instanceof JSONObject)
@@ -159,7 +174,13 @@ public class Backend {
                         if (json instanceof JSONObject)
                             infoArrayObj = new JSONObject(infoArray);
 
-                        Objects obj = new Objects(id, title, complex, dateCreated,address, price, discount, phonesObj, imagesObj, infoArrayObj, description, coordX, coordY, zoom);
+                        DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(context, true);
+                        Boolean isLiked = myDatabaseHelper.getLiked(id);
+                        myDatabaseHelper.close();
+
+
+
+                        Objects obj = new Objects(id, title, complex, dateCreated,address, price, discount, phonesObj, imagesObj, infoArrayObj, description, coordX, coordY, zoom, isLiked);
                         setValue(obj);
                     } catch (final JSONException e) {
                         Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
@@ -187,7 +208,6 @@ public class Backend {
                     try {
                         JSONObject jsonObj = new JSONObject(jsonResponse);
                         JSONArray objectsArray = jsonObj.getJSONArray("objects");
-
                         for (int i = 0; i < objectsArray.length(); i++) {
                             JSONObject c = objectsArray.getJSONObject(i);
                             Integer id = c.getInt("id");
@@ -199,10 +219,24 @@ public class Backend {
                                 mapObjects.add(obj);
                             }
                         }
+
+                        JSONObject objectMap = jsonObj.getJSONObject("mapProperty");
+
+                        String coordX = objectMap.getString("coord_x");
+                        String coordY = objectMap.getString("coord_y");
+                        String zoom = objectMap.getString("zoom");
+
+                        MapProperty mapProperty = new MapProperty(coordX, coordY, zoom);
+                        ((BaseFile) activity.getApplication()).setMapProperty(mapProperty);
+
                     } catch (final JSONException e) {
                         Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
                     }
                     setValue(mapObjects);
+
+
+
+
                 }
                 return null;
             }
@@ -215,7 +249,64 @@ public class Backend {
         };
     }
 
+    public static BackendCallback<List<Objects>> getSelectedObjects(final Activity activity, final SelectedObjectsFragment fragment, final List<Integer> objectsList) {
+        return new BackendCallback<List<Objects>>(activity, false){
+            @Override
+            public String doInBackground(Void... params )
+            {
+                Integer categoryId = ((BaseFile)  activity.getApplication()).getCategoryId();
+                String url = Defaults.SELECTED_OBJ_PATH + "?category=" + String.valueOf(categoryId);
+
+                for (int i = 0; i < objectsList.size(); i++) {
+                    url = url + "&" + "objects["+String.valueOf(i)+"]="+String.valueOf(objectsList.get(i));
+                }
+
+                String jsonResponse = Helpers.getStringByUrl(url);
+                if(jsonResponse != null){
+                    List<Objects> clones = new ArrayList<Objects>();
+                    try {
+                        JSONObject jsonObj = new JSONObject(jsonResponse);
+                        JSONArray objectsArray = jsonObj.getJSONArray("objects");
+                        DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(activity, true);
+                        for (int i = 0; i < objectsArray.length(); i++) {
+                            JSONObject c = objectsArray.getJSONObject(i);
+                            Integer id = c.getInt("id");
+                            String title = c.getString("title");
+                            String image = c.getString("image");
+                            String region = c.getString("region");
+                            String price = c.getString("price");
+                            String discount = c.getString("discount");
+                            String info = c.getString("info");
+
+                            Boolean isLiked = myDatabaseHelper.getLiked(id);
+                            Drawable d;
+                            if(isLiked){
+                                d = activity.getResources().getDrawable(R.drawable.ic_liked_active);
+                            }else{
+                                d = activity.getResources().getDrawable(R.drawable.ic_liked);
+                            }
+
+                            Objects obj = new Objects(id, title, image, region, price, discount, info, d, isLiked);
+                            clones.add(obj);
+                        }
+                        myDatabaseHelper.close();
+                    } catch (final JSONException e) {
+                        Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
+                    }
+                    setValue(clones);
+                }
+                return null;
+            }
+            @Override
+            public void handleResponse( List<Objects> clones )
+            {
+
+                super.handleResponse( clones );
+                fragment.backendResponse(clones);
 
 
+            }
+        };
+    }
 
 }

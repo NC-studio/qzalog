@@ -12,6 +12,7 @@ import com.example.a24814.qzalog.components.Backend;
 import com.example.a24814.qzalog.components.BackendCallback;
 import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.models.MapObject;
+import com.example.a24814.qzalog.models.MapProperty;
 import com.example.a24814.qzalog.models.Objects;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,6 +46,8 @@ public class MapFragment extends Fragment {
 
     private BackendCallback<List<MapObject>> backendAsync;
 
+    private MapProperty mapProperty;
+
     // Declare a variable for the cluster manager.
     private ClusterManager<MapObject> mClusterManager;
 
@@ -60,6 +63,7 @@ public class MapFragment extends Fragment {
 
         url = ((MapActivity)getActivity()).getUrl();
         if(url != null){
+
             Log.d("testtest", url);
             backendAsync =  Backend.getMapObjects(getActivity(), fragment, url);
             backendAsync.execute();
@@ -100,6 +104,9 @@ public class MapFragment extends Fragment {
     }
 
     public void backendResponse(final List<MapObject> mapObjects){
+
+        mapProperty = ((BaseFile) getActivity().getApplication()).geMapProperty();
+
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
@@ -146,18 +153,19 @@ public class MapFragment extends Fragment {
     private void setUpClusterer(List<MapObject> mapObjects) {
 
         // Position the map.
-        MapObject mapObjectFirst = mapObjects.get(0);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapObjectFirst.getPosition(), 10));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapProperty.getPosition(), Integer.valueOf(mapProperty.getZoom())));
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<MapObject>(getActivity(), googleMap);
         mClusterManager.setOnClusterItemClickListener(mClusterItemClickListener);
+        mClusterManager.setOnClusterClickListener(mClusterItemClickListenerList);
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         googleMap.setOnCameraIdleListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
+
 
         // Add cluster items (markers) to the cluster manager.
         addItems(mapObjects);
@@ -191,8 +199,6 @@ public class MapFragment extends Fragment {
         @Override
         public boolean onClusterClick(Cluster<MapObject> cluster) {
             Collection items = cluster.getItems();
-
-
             List<Integer> selectedObjects = new ArrayList<Integer>();
             for (Object item : items) {
                 Integer id = ((MapObject) item).getId();
@@ -202,7 +208,6 @@ public class MapFragment extends Fragment {
 
             Intent intent = new Intent(getActivity(), SelectedObjectsActivity.class);
             startActivity(intent);
-
 
             return false;
         }

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
+import com.example.a24814.qzalog.models.SimpleImageModel;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -32,7 +33,7 @@ public class GalleryFragment extends Fragment {
 
     private Integer imagesAmount;
 
-    private ArrayList<String> horizontalList;
+    private ArrayList<SimpleImageModel> horizontalList;
 
     private RecyclerView horizontal_recycler_view;
 
@@ -61,13 +62,13 @@ public class GalleryFragment extends Fragment {
 
         initView();
 
-        horizontalList=new ArrayList<>();
+        horizontalList=new ArrayList<SimpleImageModel>();
         try {
             Iterator<String> temp = images.keys();
             while (temp.hasNext()) {
                 String key = temp.next();
                 JSONObject value = images.getJSONObject(key);
-                horizontalList.add(value.get("big").toString());
+                horizontalList.add(new SimpleImageModel(value.get("big").toString(), Integer.valueOf(key)));
             }
 
 
@@ -99,13 +100,13 @@ public class GalleryFragment extends Fragment {
     }
 
     private void initView(){
-        horizontal_recycler_view= (RecyclerView) view.findViewById(R.id.horizontal_recycler_view);
+        horizontal_recycler_view = (RecyclerView) view.findViewById(R.id.horizontal_recycler_view);
 
     }
 
     public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.MyViewHolder> {
 
-        private List<String> horizontalList;
+        private List<SimpleImageModel> horizontalList;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public ImageView imageView;
@@ -114,7 +115,7 @@ public class GalleryFragment extends Fragment {
                 imageView = (ImageView) view.findViewById(R.id.objectImage);
             }
         }
-        public HorizontalAdapter(List<String> horizontalList) {
+        public HorizontalAdapter(List<SimpleImageModel> horizontalList) {
             this.horizontalList = horizontalList;
         }
         @Override
@@ -126,7 +127,7 @@ public class GalleryFragment extends Fragment {
         @Override
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
             Picasso.with(getActivity())
-                    .load(horizontalList.get(position))
+                    .load(horizontalList.get(position).getName())
                     .tag("image")
                     .placeholder(R.drawable.trick )
                     .into(holder.imageView);

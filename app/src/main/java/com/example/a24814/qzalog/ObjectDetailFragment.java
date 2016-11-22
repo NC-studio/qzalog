@@ -2,6 +2,7 @@ package com.example.a24814.qzalog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,12 +20,16 @@ import android.widget.TextView;
 import com.example.a24814.qzalog.components.Backend;
 import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.models.Objects;
+import com.example.a24814.qzalog.models.SimpleImageModel;
+import com.example.a24814.qzalog.models.SimpleValueOrder;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,7 +53,7 @@ public class ObjectDetailFragment extends Fragment {
     private LayoutInflater inflater;
 
 
-    private ArrayList<String> horizontalList;
+    private ArrayList<SimpleImageModel> horizontalList;
 
     private RecyclerView horizontal_recycler_view;
 
@@ -101,7 +106,22 @@ public class ObjectDetailFragment extends Fragment {
 
             loader.setVisibility(View.GONE);
             objContainer.setVisibility(View.VISIBLE);
+
+            Resources resources = getActivity().getResources();
+            if(object.getLiked()){
+                int resourceId = resources.getIdentifier("ic_star_active", "drawable",
+                        getActivity().getPackageName());
+                (((ObjectDetailActivity) getActivity()).getLikeIcon()).setIcon(resources.getDrawable(resourceId));
+            }else{
+
+                int resourceId = resources.getIdentifier("ic_star", "drawable",
+                        getActivity().getPackageName());
+                (((ObjectDetailActivity) getActivity()).getLikeIcon()).setIcon(resources.getDrawable(resourceId));
+            }
+
             (((ObjectDetailActivity) getActivity()).getLikeIcon()).setVisible(true);
+
+
             if(object.getCoordX() != null && !object.getCoordX().isEmpty())
                 (((ObjectDetailActivity) getActivity()).getMapIcon()).setVisible(true);
 
@@ -138,17 +158,27 @@ public class ObjectDetailFragment extends Fragment {
             LinearLayout dynamicParamsBlock = (LinearLayout) view.findViewById(R.id.parametres);
 
             JSONObject info = object.getInfoJson();
+            ArrayList<SimpleValueOrder> valueOrderList = new ArrayList<SimpleValueOrder>();
             try {
 
                 Iterator<String> temp = info.keys();
                 int i = 0;
                 while (temp.hasNext()) {
                     i++;
-                    View v = inflater.inflate(R.layout.object_detail_dynamic_params, null);
                     String key = temp.next();
                     JSONObject value = info.getJSONObject(key);
-                    ((TextView) v.findViewById(R.id.paramsName)).setText(value.get("title").toString());
-                    ((TextView) v.findViewById(R.id.paramsValue)).setText(value.get("value").toString());
+                    valueOrderList.add(new SimpleValueOrder(value.get("title").toString(), value.get("value").toString(), Integer.valueOf(key)));
+                }
+                Collections.sort(valueOrderList, new Comparator<SimpleValueOrder>(){
+                    public int compare(SimpleValueOrder emp1, SimpleValueOrder emp2) {
+                        return emp1.getPosition().compareTo(emp2.getPosition());
+                    }
+                });
+
+                for (SimpleValueOrder valueModel: valueOrderList) {
+                    View v = inflater.inflate(R.layout.object_detail_dynamic_params, null);
+                    ((TextView) v.findViewById(R.id.paramsName)).setText(valueModel.getName());
+                    ((TextView) v.findViewById(R.id.paramsValue)).setText(valueModel.getValue());
                     dynamicParams.addView(v);
                 }
 
@@ -186,14 +216,22 @@ public class ObjectDetailFragment extends Fragment {
             }
 
             JSONObject images = object.getImages();
-            horizontalList = new ArrayList<>();
+            horizontalList = new ArrayList<SimpleImageModel>();
             try {
                 Iterator<String> temp = images.keys();
                 while (temp.hasNext()) {
                     String key = temp.next();
                     JSONObject value = images.getJSONObject(key);
-                    horizontalList.add(value.get("little").toString());
+                    SimpleImageModel simpleImage = new SimpleImageModel(value.get("little").toString(), Integer.valueOf(key));
+                    horizontalList.add(simpleImage);
                 }
+
+                Collections.sort(horizontalList, new Comparator<SimpleImageModel>(){
+                    public int compare(SimpleImageModel emp1, SimpleImageModel emp2) {
+                        return emp1.getPosition().compareTo(emp2.getPosition());
+                    }
+                });
+
                 imageAmount = horizontalList.size();
                 if (imageAmount == 0) {
                     view.findViewById(R.id.imagesContainer).setVisibility(View.GONE);
@@ -228,7 +266,7 @@ public class ObjectDetailFragment extends Fragment {
 
     public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.MyViewHolder> {
 
-        private List<String> horizontalList;
+        private List<SimpleImageModel> horizontalList;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public ImageView imageView;
@@ -237,7 +275,7 @@ public class ObjectDetailFragment extends Fragment {
                 imageView = (ImageView) view.findViewById(R.id.objectImage);
             }
         }
-        public HorizontalAdapter(List<String> horizontalList) {
+        public HorizontalAdapter(List<SimpleImageModel> horizontalList) {
             this.horizontalList = horizontalList;
         }
         @Override
@@ -249,7 +287,7 @@ public class ObjectDetailFragment extends Fragment {
         @Override
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
             Picasso.with(getActivity())
-                    .load(horizontalList.get(position))
+                    .load(horizontalList.get(position).getName())
                     .tag("image")
                     .placeholder(R.drawable.trick )
                     .into(holder.imageView);

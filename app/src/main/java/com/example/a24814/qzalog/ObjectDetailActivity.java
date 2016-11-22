@@ -15,6 +15,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.a24814.qzalog.components.BaseFile;
+import com.example.a24814.qzalog.components.DataBaseAdapter;
+import com.example.a24814.qzalog.models.Objects;
+
 public class ObjectDetailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private final String TAG = "ObjectDetailActivity";
@@ -85,6 +89,7 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
         mapIcon = menu.findItem(R.id.action_map);
         likeIcon = menu.findItem(R.id.action_like);
 
+
         return true;
     }
 
@@ -95,6 +100,22 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
         if (id == R.id.action_map) {
             Intent intent = new Intent(this, MapActivity.class);
             startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_like) {
+            Objects object = ((BaseFile) getApplication()).getObjectModel();
+            DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(this, true);
+            Boolean liked = myDatabaseHelper.manageLiked(object.getId());
+            myDatabaseHelper.close();
+            if(liked){
+                item.setIcon(getResources().getDrawable(R.drawable.ic_star_active));
+            }else{
+                item.setIcon(getResources().getDrawable(R.drawable.ic_star));
+            }
+            object.setLiked(liked);
+
+            ((BaseFile) getApplication()).setObjectModel(object);
             return true;
         }
 

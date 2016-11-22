@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.Backend;
@@ -26,11 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CategoryObjectsFragment extends Fragment {
+public class SelectedObjectsFragment extends Fragment {
 
     private final String TAG = "CategoryObjects Fragment";
 
-    private CategoryObjectsFragment fragment;
+    private SelectedObjectsFragment fragment;
 
     private List<Objects> objects = new ArrayList<Objects>();;
 
@@ -40,40 +39,30 @@ public class CategoryObjectsFragment extends Fragment {
 
     private View view;
 
-    private RelativeLayout noFoundBlock;
-
     private ArrayAdapter<Objects> adapter;
 
     private Boolean isLoading = false;
 
     private Boolean isUploaded = false;
 
-    private Boolean pauseLoading = false;
-
     private String urlRequest;
 
-    private Integer page = 1;
 
     private Integer objNumber = 0;
 
-    private BackendCallback<List<Objects>> backendAsync;
+    private List<Integer> selectedObjects;
 
+    private BackendCallback<List<Objects>> backendAsync;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         fragment = this;
         view = inflater.inflate(R.layout.objects_list,
                 container, false);
-
-        urlRequest = ((BaseFile) getActivity().getApplication()).getUrl();
-        objects = ((BaseFile) getActivity().getApplication()).getObjects();
-
         initView();
         initAdapter();
-
         return view;
     }
 
@@ -97,7 +86,6 @@ public class CategoryObjectsFragment extends Fragment {
         final LayoutInflater factory = getActivity().getLayoutInflater();
         loadingFooter = factory.inflate(R.layout.list_loader, null);
         objectsList.addFooterView(loadingFooter);
-        noFoundBlock = (RelativeLayout) view.findViewById(R.id.noFoundBlock);
 
     }
 
@@ -105,6 +93,7 @@ public class CategoryObjectsFragment extends Fragment {
 
     private void initAdapter(){
 
+        selectedObjects = ((BaseFile) getActivity().getApplication()).getMapObjects();
 
         adapter = new ObjectAdapter(getActivity(), R.layout.objects_list_item, objects);
         objectsList.setAdapter(adapter);
@@ -122,7 +111,9 @@ public class CategoryObjectsFragment extends Fragment {
             }
         });
         isLoading = true;
-        backendAsync =  Backend.getObjects(getActivity(), fragment, urlRequest, page);
+
+
+        backendAsync =  Backend.getSelectedObjects(getActivity(), fragment, selectedObjects);
         backendAsync.execute();
 
     }
@@ -148,16 +139,7 @@ public class CategoryObjectsFragment extends Fragment {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                              int totalItemCount) {
-            int lastInScreen = firstVisibleItem + visibleItemCount;
-            if (lastInScreen == totalItemCount) {
-                if(isUploaded == false && isLoading==false) {
-                    isLoading = true;
-                    loadingFooter.setVisibility(View.VISIBLE);
 
-                    backendAsync = Backend.getObjects(getActivity(), fragment, urlRequest, page);
-                    backendAsync.execute();
-                }
-            }
         }
     }
 
@@ -216,11 +198,12 @@ public class CategoryObjectsFragment extends Fragment {
                         }else{
                             object.setLikerIcon(getResources().getDrawable(R.drawable.ic_liked));
                         }
-                        //object.setLiked(liked);
                         holder.likeCheker.setImageDrawable(object.getLikerIcon());
 
                     }
                 });
+
+
 
                 convertView.setTag(holder);
             }else {
@@ -235,15 +218,6 @@ public class CategoryObjectsFragment extends Fragment {
                     .tag("image")
                     .placeholder(R.drawable.trick )
                     .into(holder.img);
-                    /*.into(holder.img, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                           // holder.progress.setVisibility(View.GONE);
-                        }
-                        @Override
-                        public void onError() {
-                        }
-                    });*/
 
             holder.title.setText(object.getName());
             holder.region.setText(object.getRegion());
@@ -252,40 +226,25 @@ public class CategoryObjectsFragment extends Fragment {
             holder.discount.setText(object.getDiscount());
             holder.discount.setVisibility(object.getVisibility());
 
-
-
             return convertView;
         }
     }
 
     public void backendResponse(List<Objects> clones){
-        page = page + 1;
-        loadingFooter.setVisibility(View.GONE);
 
+       //loadingFooter.setVisibility(View.GONE);
         for (Objects item : clones) {
             objects.add(item);
         }
         adapter.notifyDataSetChanged();
         objectsList.requestLayout();
-        if(objects != null) {
-            ((BaseFile) getActivity().getApplication()).setObjects(objects);
-
-
-            if (clones.size() % 10 > 0 || objNumber == objects.size()) {
-                if (objects.size() == 0) {
-                    noFoundBlock.setVisibility(View.VISIBLE);
-                    objectsList.setVisibility(View.GONE);
-                }
-                this.isUploaded = true;
-                objectsList.removeFooterView(loadingFooter);
-            } else {
-                objNumber = objects.size();
-            }
-        }
-
+        objectsList.removeFooterView(loadingFooter);
+        isUploaded = true;
         isLoading = false;
-        //List<Objects> objects1 = ((BaseFile) getActivity().getApplication()).getObjects();
-       // objects =  ((BaseFile) getActivity().getApplication()).getObjects();
+
+
+
+
     }
 
 

@@ -86,13 +86,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
     private void copyDataBase() throws IOException
     {
 
-
-
-
         OutputStream mOutput = new FileOutputStream(dbFile);
-
-        Log.d("test", "test");
-
         InputStream mInput = mContext.getAssets().open(DB_NAME);
         byte[] mBuffer = new byte[1024];
         int mLength;

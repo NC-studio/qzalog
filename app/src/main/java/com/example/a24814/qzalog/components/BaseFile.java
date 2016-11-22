@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.a24814.qzalog.models.Category;
 import com.example.a24814.qzalog.models.Form;
 import com.example.a24814.qzalog.models.FormHistory;
+import com.example.a24814.qzalog.models.MapProperty;
 import com.example.a24814.qzalog.models.Objects;
 
 import org.json.JSONObject;
@@ -40,6 +41,8 @@ public class BaseFile extends Application {
     }
 
     public List<Integer> mapObjects = new ArrayList<Integer>();
+
+    private MapProperty mapProperty;
 
 
 
@@ -128,6 +131,14 @@ public class BaseFile extends Application {
 
     public void setMapObjects(List<Integer> mapObjects){
         this.mapObjects =  mapObjects;
+    }
+
+    public MapProperty geMapProperty(){
+        return mapProperty;
+    }
+
+    public void setMapProperty(MapProperty mapProperty){
+        this.mapProperty =  mapProperty;
     }
 
 
