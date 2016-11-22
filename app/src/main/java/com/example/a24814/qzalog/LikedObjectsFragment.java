@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.Backend;
 import com.example.a24814.qzalog.components.BackendCallback;
-import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.components.DataBaseAdapter;
 import com.example.a24814.qzalog.models.Objects;
 import com.squareup.picasso.Picasso;
@@ -25,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SelectedObjectsFragment extends Fragment {
+public class LikedObjectsFragment extends Fragment {
 
-    private SelectedObjectsFragment fragment;
+    private LikedObjectsFragment fragment;
 
     private List<Objects> objects = new ArrayList<Objects>();;
 
@@ -79,12 +78,13 @@ public class SelectedObjectsFragment extends Fragment {
 
 
     private void initAdapter(){
+        DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(getActivity(), true);
+        selectedObjects = myDatabaseHelper.getLikedAll();
+        myDatabaseHelper.close();
 
-        selectedObjects = ((BaseFile) getActivity().getApplication()).getMapObjects();
 
         adapter = new ObjectAdapter(getActivity(), R.layout.objects_list_item, objects);
         objectsList.setAdapter(adapter);
-
         objectsList.setOnScrollListener(new SampleScrollListener(getActivity()));
         objectsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -97,8 +97,7 @@ public class SelectedObjectsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        backendAsync =  Backend.getSelectedObjects(getActivity(), fragment, selectedObjects);
+        backendAsync =  Backend.getLikedObjects(getActivity(), fragment, selectedObjects);
         backendAsync.execute();
 
     }

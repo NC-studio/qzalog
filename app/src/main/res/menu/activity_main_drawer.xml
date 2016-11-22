@@ -8,11 +8,7 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Поиск" />
         <item
-            android:id="@+id/nav_map"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Поиск по карте" />
-        <item
-            android:id="@+id/nav_checked"
+            android:id="@+id/nav_liked"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Избранное" />
         <item

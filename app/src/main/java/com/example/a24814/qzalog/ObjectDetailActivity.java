@@ -37,7 +37,7 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
 
         _context = this;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_default);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

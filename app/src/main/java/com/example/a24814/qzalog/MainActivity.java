@@ -1,6 +1,7 @@
 package com.example.a24814.qzalog;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -22,10 +24,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private final String TAG = "MainActivity";
 
-    private DrawerLayout mDrawer;
-    private Toolbar toolbar;
-    private NavigationView nvDrawer;
-
     // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
     // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
     private ActionBarDrawerToggle drawerToggle;
@@ -34,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FrameLayout flContent;
 
     private DataBaseAdapter dbHelper;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
         //initDataBase();
 
@@ -112,16 +113,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        //if (id == R.id.action_settings) {
-          //  return true;
-      //  }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Log.d("test", String.valueOf(id));
+        Log.d("test", String.valueOf(R.id.nav_liked));
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.nav_liked) {
+            Intent intent = new Intent(this, LikedObjectsActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
         return false;
     }
 

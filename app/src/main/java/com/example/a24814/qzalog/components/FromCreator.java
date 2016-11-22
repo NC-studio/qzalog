@@ -151,10 +151,6 @@ public class FromCreator {
         for (SimpleSpinnerValue spinner_value : spinner_list) {
             String key = String.valueOf(spinner_value.getId());
 
-
-
-
-
             spinnerValues.put(Integer.valueOf(i), key);
             spinnerlist.add(spinner_value.getName());
 

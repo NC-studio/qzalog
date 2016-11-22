@@ -59,6 +59,8 @@ public class FormFragment extends Fragment {
 
     private Boolean regionSelecting = false;
 
+    private Boolean generated = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -137,10 +139,12 @@ public class FormFragment extends Fragment {
         }
         fields = ((FormActivity)getActivity()).getFields();
         if(fields.size() > 0){
-            parseSavedList();
+            if(generated == false)
+                parseSavedList();
         }else{
             parseJson();
         }
+        generated = true;
 
 
         if(regionSelecting != true && created == true) {
@@ -158,8 +162,6 @@ public class FormFragment extends Fragment {
                     ((BaseFile) getActivity().getApplication()).setFields(fields);
                     ((BaseFile) getActivity().getApplication()).setUrl(request);
                     ((BaseFile) getActivity().getApplication()).setFormRegion(region);
-                    Log.d("testtestest", region.toString());
-
 
                   //  ((BaseFile) getActivity().getApplication()).setPage(1);
                     ((BaseFile) getActivity().getApplication()).setObjects(new ArrayList<Objects>());
@@ -247,6 +249,7 @@ public class FormFragment extends Fragment {
             });
 
             for (Form field : fields) {
+
                 FromCreator fromCreator = new FromCreator(getActivity(), field);
                 View v = fromCreator.createField();
                 formFields.addView(v);
@@ -262,6 +265,7 @@ public class FormFragment extends Fragment {
     private void parseSavedList(){
         for (Form field : fields)
         {
+
             FromCreator fromCreator = new FromCreator(getActivity(), field);
             View v = fromCreator.createField();
             formFields.addView(v);
@@ -301,6 +305,8 @@ public class FormFragment extends Fragment {
 
     public void clearForm(){
         for (Form field : fields) {
+
+            Log.d("testio", String.valueOf(field.getType()));
             if(field.getSelectedValue() != null){
                 View v = field.getView();
                 field.setSelectedValue(null);

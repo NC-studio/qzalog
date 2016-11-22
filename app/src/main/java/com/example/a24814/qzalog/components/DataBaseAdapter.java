@@ -12,6 +12,7 @@ import com.example.a24814.qzalog.models.Region;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseAdapter {
@@ -165,6 +166,26 @@ public class DataBaseAdapter {
         }
         return false;
     }
+
+    public List<Integer> getLikedAll() {
+        List<Integer> selectedObjects = new ArrayList<Integer>();
+        final String TABLE_NAME = "liked";
+
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        Cursor cursor      = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Integer i =  cursor.getInt(cursor.getColumnIndex("object_id"));
+                selectedObjects.add(i);
+            } while (cursor.moveToNext());
+
+        }
+        return selectedObjects;
+    }
+
+
+
 
 
 }
