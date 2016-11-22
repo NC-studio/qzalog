@@ -1,13 +1,19 @@
 package com.example.a24814.qzalog.models;
 
 
-public class MapObject {
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
+
+public class MapObject implements ClusterItem {
 
     private Integer id;
 
     private String coordX;
 
     private String coordY;
+
+    private LatLng mPosition;
 
     public MapObject(){
         super();
@@ -18,7 +24,7 @@ public class MapObject {
         this.id = id;
         this.coordX = coordX;
         this.coordY = coordY;
-
+        mPosition = new LatLng(Double.valueOf(coordX), Double.valueOf(coordY));
     }
 
     public Integer getId()
@@ -34,5 +40,9 @@ public class MapObject {
     public String getCoordY()
     {
         return coordY;
+    }
+
+    public LatLng getPosition() {
+        return mPosition;
     }
 }

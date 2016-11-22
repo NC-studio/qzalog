@@ -39,6 +39,12 @@ public class BaseFile extends Application {
         return this.cagegoryList;
     }
 
+    public List<Integer> mapObjects = new ArrayList<Integer>();
+
+
+
+
+
     public void setFormRegion(JSONObject formRegion) {
         this.formRegion = formRegion;
     }
@@ -114,6 +120,14 @@ public class BaseFile extends Application {
 
     public void setObjectModel(Objects objectModel) {
         this.objectModel = objectModel;
+    }
+
+    public List<Integer> getMapObjects(){
+        return mapObjects;
+    }
+
+    public void setMapObjects(List<Integer> mapObjects){
+        this.mapObjects =  mapObjects;
     }
 
 

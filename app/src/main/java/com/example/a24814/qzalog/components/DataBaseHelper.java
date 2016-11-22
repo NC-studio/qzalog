@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -22,10 +21,11 @@ public class DataBaseHelper extends SQLiteOpenHelper
     private static String DB_NAME ="qzalog.db";
     private SQLiteDatabase mDataBase;
     private final Context mContext;
-    private static final int DATABASE_VERSION = 51;
+    private static final int DATABASE_VERSION = 52;
     private static boolean mDataBaseExist;
     private static File dir;
     private static File file;
+    private File dbFile;
 
     public DataBaseHelper(Context context, Boolean inited)
     {
@@ -34,27 +34,24 @@ public class DataBaseHelper extends SQLiteOpenHelper
 
 
         if(android.os.Build.VERSION.SDK_INT >= 17){
-            DB_PATH = Environment.getExternalStorageDirectory() + "/databases/";
+            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
         }
-        else
-        {
+        else {
             DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
         }
 
 
 
-        if(inited == true){
-            mDataBaseExist = true;
-        }else{
-            mDataBaseExist = checkDataBase();
-        }
+        mDataBaseExist = checkDataBase();
 
         if (mDataBaseExist) {
             openDataBase();
         } else {
             try
             {
+                this.getReadableDatabase();
                 createDataBase();
+                this.close();
             }
             catch (IOException mIOException)
             {
@@ -80,7 +77,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
     //Check that the database exists here: /data/data/your package/databases/Da Name
     private boolean checkDataBase()
     {
-        File dbFile = new File(DB_PATH + DB_NAME);
+        dbFile = new File(DB_PATH + DB_NAME);
         Log.d(TAG, dbFile + "   "+ dbFile.exists());
         return dbFile.exists();
     }
@@ -88,18 +85,25 @@ public class DataBaseHelper extends SQLiteOpenHelper
     //Copy the database from assets
     private void copyDataBase() throws IOException
     {
+
+
+
+
+        OutputStream mOutput = new FileOutputStream(dbFile);
+
+        Log.d("test", "test");
+
         InputStream mInput = mContext.getAssets().open(DB_NAME);
-      //  String outFileName = mContext.getDatabasePath(DB_NAME);
-        OutputStream  mOutput = new FileOutputStream(mContext.getDatabasePath(DB_NAME));
         byte[] mBuffer = new byte[1024];
         int mLength;
         while ((mLength = mInput.read(mBuffer))>0)
         {
             mOutput.write(mBuffer, 0, mLength);
         }
+        mInput.close();
         mOutput.flush();
         mOutput.close();
-        mInput.close();
+
     }
 
     //Open the database, so we can query it
@@ -126,6 +130,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "onCreate");
+
 
     }
 

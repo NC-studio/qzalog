@@ -38,7 +38,8 @@
         <activity android:name=".ListActivity" />
         <activity android:name=".ObjectDetailActivity" />
         <activity android:name=".MapActivity" />
-        <activity android:name=".GalleryActivity"></activity>
+        <activity android:name=".GalleryActivity" />
+        <activity android:name=".SelectedObjectsActivity"></activity>
     </application>
 
 </manifest>

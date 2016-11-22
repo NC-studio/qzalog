@@ -187,14 +187,17 @@ public class Backend {
                     try {
                         JSONObject jsonObj = new JSONObject(jsonResponse);
                         JSONArray objectsArray = jsonObj.getJSONArray("objects");
+
                         for (int i = 0; i < objectsArray.length(); i++) {
                             JSONObject c = objectsArray.getJSONObject(i);
                             Integer id = c.getInt("id");
-                            String coordX = c.getString("coordX");
-                            String coordY = c.getString("coordY");
+                            String coordX = c.getString("coord_x");
+                            String coordY = c.getString("coord_y");
 
-                            MapObject obj = new MapObject(id, coordX, coordY);
-                            mapObjects.add(obj);
+                            if(!coordX.isEmpty()) {
+                                MapObject obj = new MapObject(id, coordX, coordY);
+                                mapObjects.add(obj);
+                            }
                         }
                     } catch (final JSONException e) {
                         Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
@@ -206,8 +209,6 @@ public class Backend {
             @Override
             public void handleResponse( List<MapObject> mapObjects )
             {
-                Log.d("testtest", String.valueOf(mapObjects.size()));
-                Log.d("testtest", mapObjects.toString());
                 super.handleResponse( mapObjects );
                 fragment.backendResponse(mapObjects);
             }

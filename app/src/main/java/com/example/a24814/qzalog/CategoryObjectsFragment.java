@@ -120,7 +120,6 @@ public class CategoryObjectsFragment extends Fragment {
                                     long arg3) {
                 backendAsync.cancel(true);
                 Objects obj = objects.get(arg2);
-
                 Intent intent = new Intent(getActivity(), ObjectDetailActivity.class);
                 intent.putExtra("objId", obj.getId());
                 startActivity(intent);
