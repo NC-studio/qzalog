@@ -118,6 +118,7 @@ public class CategoryObjectsFragment extends Fragment {
                 Objects obj = objects.get(arg2);
                 Intent intent = new Intent(getActivity(), ObjectDetailActivity.class);
                 intent.putExtra("objId", obj.getId());
+                intent.putExtra("objPos", arg2);
                 startActivity(intent);
             }
         });

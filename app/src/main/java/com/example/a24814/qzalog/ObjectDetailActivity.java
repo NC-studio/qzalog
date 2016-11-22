@@ -19,6 +19,8 @@ import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.components.DataBaseAdapter;
 import com.example.a24814.qzalog.models.Objects;
 
+import java.util.List;
+
 public class ObjectDetailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private final String TAG = "ObjectDetailActivity";
@@ -28,9 +30,11 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
 
     private Integer objId;
 
-    MenuItem mapIcon;
+    private MenuItem mapIcon;
 
-    MenuItem likeIcon;
+    private MenuItem likeIcon;
+
+    private Integer objPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             objId = extras.getInt("objId");
+            objPos = extras.getInt("objPos");
         }
 
 
@@ -115,7 +120,19 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
             }
             object.setLiked(liked);
 
+            //Не уверен что критично важно и сильно помогает делу
             ((BaseFile) getApplication()).setObjectModel(object);
+            List<Objects> objects = ((BaseFile) getApplication()).getObjects();
+            Objects objectSelected = objects.get(objPos);
+            objectSelected.setLiked(liked);
+            if(liked){
+                objectSelected.setLikerIcon(getResources().getDrawable(R.drawable.ic_liked_active));
+            }else{
+                objectSelected.setLikerIcon(getResources().getDrawable(R.drawable.ic_liked));
+            }
+
+
+
             return true;
         }
 
