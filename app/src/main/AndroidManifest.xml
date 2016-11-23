@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
-        android:name=".components.BaseFile"
+        android:name="com.ncgoup.a24814.qzalog.components.BaseFile"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,7 +20,7 @@
             android:value="AIzaSyAyMiAgTq_34jaE6bF3-zcnDxAgHUcBGfs" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.ncgoup.a24814.qzalog.MainActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -29,19 +29,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CategoryActivity" />
+        <activity android:name="com.ncgoup.a24814.qzalog.CategoryActivity" />
         <activity
-            android:name=".FormActivity"
+            android:name="com.ncgoup.a24814.qzalog.FormActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ListActivity" />
-        <activity android:name=".ObjectDetailActivity" />
-        <activity android:name=".MapActivity" />
-        <activity android:name=".GalleryActivity" />
-        <activity android:name=".SelectedObjectsActivity"></activity>
-        <activity android:name=".LikedObjectsActivity"></activity>
-        <activity android:name=".InfoActivity"></activity>
+        <activity android:name="com.ncgoup.a24814.qzalog.ListActivity" />
+        <activity android:name="com.ncgoup.a24814.qzalog.ObjectDetailActivity" />
+        <activity android:name="com.ncgoup.a24814.qzalog.MapActivity" />
+        <activity android:name="com.ncgoup.a24814.qzalog.GalleryActivity" />
+        <activity android:name="com.ncgoup.a24814.qzalog.SelectedObjectsActivity"></activity>
+        <activity android:name="com.ncgoup.a24814.qzalog.LikedObjectsActivity"></activity>
+        <activity android:name="com.ncgoup.a24814.qzalog.InfoActivity"></activity>
     </application>
 
 </manifest>

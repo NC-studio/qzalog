@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="8dp"
     android:background="@color/whiteGrey"
-    tools:context="com.example.a24814.qzalog.ObjectDetailActivity">
+    tools:context="com.ncgoup.a24814.qzalog.ObjectDetailActivity">
 
     <TextView
         android:textAppearance="@style/infoText"
