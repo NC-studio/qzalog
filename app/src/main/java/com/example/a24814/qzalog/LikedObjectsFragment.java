@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.Backend;
@@ -42,6 +43,7 @@ public class LikedObjectsFragment extends Fragment {
 
     private BackendCallback<List<Objects>> backendAsync;
 
+    private RelativeLayout noFoundBlock;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +74,7 @@ public class LikedObjectsFragment extends Fragment {
         final LayoutInflater factory = getActivity().getLayoutInflater();
         loadingFooter = factory.inflate(R.layout.list_loader, null);
         objectsList.addFooterView(loadingFooter);
-
+        noFoundBlock = (RelativeLayout) view.findViewById(R.id.noFoundBlock);
     }
 
 
@@ -216,13 +218,17 @@ public class LikedObjectsFragment extends Fragment {
 
     public void backendResponse(List<Objects> clones){
 
-       //loadingFooter.setVisibility(View.GONE);
-        for (Objects item : clones) {
-            objects.add(item);
-        }
-        adapter.notifyDataSetChanged();
-        objectsList.requestLayout();
-        objectsList.removeFooterView(loadingFooter);
+       if(!clones.isEmpty()){
+           for (Objects item : clones) {
+               objects.add(item);
+           }
+           adapter.notifyDataSetChanged();
+           objectsList.requestLayout();
+           objectsList.removeFooterView(loadingFooter);
+       }else{
+           noFoundBlock.setVisibility(View.VISIBLE);
+       }
+
 
     }
 

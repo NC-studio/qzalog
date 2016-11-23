@@ -16,6 +16,8 @@ import java.util.List;
 
 public class BaseFile extends Application {
 
+    private Boolean mapInited = false;
+
     private String urlRequest = Defaults.CATEGORY_PATH;
 
     private Integer categoryId;
@@ -45,7 +47,13 @@ public class BaseFile extends Application {
     private MapProperty mapProperty;
 
 
+    public void setMapInited(Boolean formRegion) {
+        this.mapInited = mapInited;
+    }
 
+    public Boolean getMapInited() {
+        return this.mapInited;
+    }
 
 
     public void setFormRegion(JSONObject formRegion) {

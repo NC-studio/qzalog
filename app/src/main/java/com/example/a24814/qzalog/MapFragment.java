@@ -1,12 +1,13 @@
 package com.example.a24814.qzalog;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.a24814.qzalog.components.Backend;
 import com.example.a24814.qzalog.components.BackendCallback;
@@ -14,6 +15,8 @@ import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.models.MapObject;
 import com.example.a24814.qzalog.models.MapProperty;
 import com.example.a24814.qzalog.models.Objects;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -31,6 +34,8 @@ import java.util.List;
 
 
 public class MapFragment extends Fragment {
+
+    private static final int GPS_ERRORDIALOG_REQUEST = 9001;
 
     private MapFragment fragment;
 
@@ -62,43 +67,29 @@ public class MapFragment extends Fragment {
         mMapView.onCreate(savedInstanceState);
 
         url = ((MapActivity)getActivity()).getUrl();
-        if(url != null){
+        if (servicesOK()) {
+            if (url != null) {
+                backendAsync = Backend.getMapObjects(getActivity(), fragment, url);
+                backendAsync.execute();
+            } else {
+                object = ((BaseFile) getActivity().getApplication()).getObjectModel();
+                mMapView.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap mMap) {
+                        googleMap = mMap;
 
-            Log.d("testtest", url);
-            backendAsync =  Backend.getMapObjects(getActivity(), fragment, url);
-            backendAsync.execute();
-        }else{
-            object = ((BaseFile) getActivity().getApplication()).getObjectModel();
-            mMapView.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap mMap) {
-                    googleMap = mMap;
+                        UiSettings settings = googleMap.getUiSettings();
+                        settings.setZoomControlsEnabled(true);
+                        settings.setZoomGesturesEnabled(true);
 
-                            /*try {
-                                MapsInitializer.initialize(getActivity().getApplicationContext());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }*/
+                        LatLng location = new LatLng(Double.valueOf(object.getCoordX()), Double.valueOf(object.getCoordY()));
+                        googleMap.addMarker(new MarkerOptions().position(location));
 
-                    // For showing a move to my location button
-                   /* try {
-                        googleMap.setMyLocationEnabled(true);
-                    } catch (SecurityException e) {
-                    }*/
-
-                    UiSettings settings = googleMap.getUiSettings();
-                    settings.setZoomControlsEnabled(true);
-                    settings.setZoomGesturesEnabled(true);
-
-                    LatLng location = new LatLng(Double.valueOf(object.getCoordX()), Double.valueOf(object.getCoordY()));
-                    googleMap.addMarker(new MarkerOptions().position(location));
-
-                    // googleMap.addMarker(new MarkerOptions().position(location).title("Marker Title").snippet("Marker Description"));
-                    // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(location).zoom(Integer.valueOf(object.getZoom())).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-            });
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(location).zoom(Integer.valueOf(object.getZoom())).build();
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+                });
+            }
         }
         return view;
     }
@@ -106,19 +97,18 @@ public class MapFragment extends Fragment {
     public void backendResponse(final List<MapObject> mapObjects){
 
         mapProperty = ((BaseFile) getActivity().getApplication()).geMapProperty();
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                UiSettings settings = googleMap.getUiSettings();
-                settings.setZoomControlsEnabled(true);
-                settings.setZoomGesturesEnabled(true);
-
-                setUpClusterer(mapObjects);
-            }
-        });
-
+        if (!mapObjects.isEmpty()) {
+            mMapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap mMap) {
+                    googleMap = mMap;
+                    UiSettings settings = googleMap.getUiSettings();
+                    settings.setZoomControlsEnabled(true);
+                    settings.setZoomGesturesEnabled(true);
+                    setUpClusterer(mapObjects);
+                }
+            });
+        }
     }
 
 
@@ -152,23 +142,27 @@ public class MapFragment extends Fragment {
 
     private void setUpClusterer(List<MapObject> mapObjects) {
 
-        // Position the map.
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapProperty.getPosition(), Integer.valueOf(mapProperty.getZoom())));
+        if(googleMap != null){
+            // Position the map.
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapProperty.getPosition(), Integer.valueOf(mapProperty.getZoom())));
 
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<MapObject>(getActivity(), googleMap);
-        mClusterManager.setOnClusterItemClickListener(mClusterItemClickListener);
-        mClusterManager.setOnClusterClickListener(mClusterItemClickListenerList);
+            // Initialize the manager with the context and the map.
+            // (Activity extends context, so we can pass 'this' in the constructor.)
+            mClusterManager = new ClusterManager<MapObject>(getActivity(), googleMap);
+            mClusterManager.setOnClusterItemClickListener(mClusterItemClickListener);
+            mClusterManager.setOnClusterClickListener(mClusterItemClickListenerList);
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        googleMap.setOnCameraIdleListener(mClusterManager);
-        googleMap.setOnMarkerClickListener(mClusterManager);
+            // Point the map's listeners at the listeners implemented by the cluster
+            // manager.
+            googleMap.setOnCameraIdleListener(mClusterManager);
+            googleMap.setOnMarkerClickListener(mClusterManager);
 
 
-        // Add cluster items (markers) to the cluster manager.
-        addItems(mapObjects);
+            // Add cluster items (markers) to the cluster manager.
+            addItems(mapObjects);
+
+        }
+
     }
 
     private void addItems(List<MapObject> mapObjects) {
@@ -205,13 +199,25 @@ public class MapFragment extends Fragment {
                 selectedObjects.add(id);
             }
             ((BaseFile) getActivity().getApplication()).setMapObjects(selectedObjects);
-
             Intent intent = new Intent(getActivity(), SelectedObjectsActivity.class);
             startActivity(intent);
-
             return false;
         }
     };
+
+    public boolean servicesOK() {
+        int isAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+        if (isAvailable == ConnectionResult.SUCCESS) {
+            return true;
+        } else if (GooglePlayServicesUtil.isUserRecoverableError(isAvailable)) {
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(isAvailable,
+                    getActivity(), GPS_ERRORDIALOG_REQUEST);
+            dialog.show();
+        } else {
+            Toast.makeText(getActivity(), "Can not connect!", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
 
 
 

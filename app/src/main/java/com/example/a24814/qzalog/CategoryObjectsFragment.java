@@ -357,7 +357,6 @@ public class CategoryObjectsFragment extends Fragment {
         if(objects != null) {
             ((BaseFile) getActivity().getApplication()).setObjects(objects);
 
-
             if (clones.size() % 10 > 0 || objNumber == objects.size()) {
                 if (objects.size() == 0) {
                     noFoundBlock.setVisibility(View.VISIBLE);

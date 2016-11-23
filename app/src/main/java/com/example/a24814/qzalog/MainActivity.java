@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
 
+
+
         n = (NavigationView) findViewById(R.id.nav_view);
         n.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.models.Category;
+import com.google.android.gms.maps.MapsInitializer;
 
 import java.util.List;
 
@@ -46,6 +47,12 @@ public class MapActivity extends AppCompatActivity {
                 ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
                 urlRequest = ((BaseFile) getApplication()).getUrl() + "&map=1";
             }
+        }
+
+        try {
+            MapsInitializer.initialize(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
