@@ -108,6 +108,8 @@ public class CategoryObjectsFragment extends Fragment {
         objectsList.addFooterView(loadingFooter);
         noFoundBlock = (RelativeLayout) view.findViewById(R.id.noFoundBlock);
 
+
+        view.findViewById(R.id.filterContainer).setVisibility(View.VISIBLE);
         filterDate = (FrameLayout) view.findViewById(R.id.filterDate);
         filterPriceUp = (FrameLayout) view.findViewById(R.id.filterPriceUp);
         filterPriceDown = (FrameLayout) view.findViewById(R.id.filterPriceDown);
