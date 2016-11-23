@@ -140,8 +140,11 @@ public class FormFragment extends Fragment {
             Log.d(TAG, e.getMessage());
         }
 
+        if(((FormActivity)getActivity()).getCategoryChanged() == false){
+            fields = ((BaseFile) getActivity().getApplication()).getFields();
+        }
 
-        if(fields.size() > 0 && ((FormActivity)getActivity()).getCategoryChanged() == false){
+        if(fields.size() > 0){
             if(generated == false){
                 fields = ((BaseFile) getActivity().getApplication()).getFields();
                 parseSavedList();
