@@ -11,7 +11,78 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+    <LinearLayout
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:id="@+id/filterContainer"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:background="@drawable/border_filter_left_active"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:id="@+id/filterDate"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/filterDateText"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:text="По дате"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_marginRight="-3px"
+            android:layout_marginLeft="-3px"
+            android:background="@drawable/border_filter_center"
+            android:id="@+id/filterPriceUp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/filterPriceUpText"
+                android:textColor="@color/appBlue"
+                android:layout_gravity="center"
+                android:text="Подешевле"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:background="@drawable/border_filter_right"
+            android:id="@+id/filterPriceDown"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/filterPriceDownText"
+                android:textColor="@color/appBlue"
+                android:layout_gravity="center"
+                android:text="Подороже"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
     <ListView
+        android:layout_below="@+id/filterContainer"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:paddingRight="0dp"

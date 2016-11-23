@@ -71,13 +71,11 @@ public class Backend {
             public void handleResponse( Boolean success )
             {
                 super.handleResponse( success );
+                try {
+                    fragment.backendResponse();
+                }catch(Exception e){
 
-                //if(success == false){
-                  //  Helpers.showToast(context, "Сервис недоступен. Проверьте соеденение с интернетом");
-               // }
-
-                fragment.backendResponse();
-
+                }
             }
         }.execute();
     }
@@ -88,6 +86,7 @@ public class Backend {
             public String doInBackground(Void... params )
             {
                 String jsonResponse = Helpers.getStringByUrl(url + "&page=" + String.valueOf(page));
+                Log.d("tet", url);
                 if(jsonResponse != null){
                     //List<Objects> objects = ((BaseFile) activity.getApplication()).getObjects();
                     List<Objects> clones = new ArrayList<Objects>();
@@ -128,7 +127,12 @@ public class Backend {
             public void handleResponse( List<Objects> clones )
             {
                 super.handleResponse( clones );
-                fragment.backendResponse(clones);
+                try {
+                    fragment.backendResponse(clones);
+                }catch(Exception e){
+
+                }
+
             }
         };
     }
@@ -189,7 +193,11 @@ public class Backend {
             public void handleResponse( Objects object )
             {
                 super.handleResponse( object );
-                fragment.backendResponse(object);
+                try {
+                    fragment.backendResponse(object);
+                }catch(Exception e){
+
+                }
             }
         }.execute();
     }
@@ -241,7 +249,12 @@ public class Backend {
             public void handleResponse( List<MapObject> mapObjects )
             {
                 super.handleResponse( mapObjects );
-                fragment.backendResponse(mapObjects);
+                try {
+                    fragment.backendResponse(mapObjects);
+                }catch(Exception e){
+
+                }
+
             }
         };
     }
@@ -299,9 +312,11 @@ public class Backend {
             {
 
                 super.handleResponse( clones );
-                fragment.backendResponse(clones);
+                try {
+                    fragment.backendResponse(clones);
+                }catch(Exception e){
 
-
+                }
             }
         };
     }
@@ -359,7 +374,11 @@ public class Backend {
             {
 
                 super.handleResponse( clones );
-                fragment.backendResponse(clones);
+                try {
+                    fragment.backendResponse(clones);
+                }catch(Exception e){
+
+                }
 
 
             }

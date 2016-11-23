@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -32,7 +33,7 @@ public class CategoryObjectsFragment extends Fragment {
 
     private CategoryObjectsFragment fragment;
 
-    private List<Objects> objects = new ArrayList<Objects>();;
+    private List<Objects> objects = new ArrayList<Objects>();
 
     private ListView objectsList;
 
@@ -58,7 +59,15 @@ public class CategoryObjectsFragment extends Fragment {
 
     private BackendCallback<List<Objects>> backendAsync;
 
+    private FrameLayout filterDate;
 
+    private FrameLayout filterPriceUp;
+
+    private FrameLayout filterPriceDown;
+
+    private Integer filterButtonActivePos = 0;
+
+    private LayoutInflater factory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,10 +103,85 @@ public class CategoryObjectsFragment extends Fragment {
 
     private void initView(){
         objectsList = (ListView) view.findViewById(R.id.objectsList);
-        final LayoutInflater factory = getActivity().getLayoutInflater();
+        factory = getActivity().getLayoutInflater();
         loadingFooter = factory.inflate(R.layout.list_loader, null);
         objectsList.addFooterView(loadingFooter);
         noFoundBlock = (RelativeLayout) view.findViewById(R.id.noFoundBlock);
+
+        filterDate = (FrameLayout) view.findViewById(R.id.filterDate);
+        filterPriceUp = (FrameLayout) view.findViewById(R.id.filterPriceUp);
+        filterPriceDown = (FrameLayout) view.findViewById(R.id.filterPriceDown);
+
+        filterDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(filterButtonActivePos != 0){
+                    filterButtonActivePos = 0;
+                    ((TextView) filterDate.findViewById(R.id.filterDateText)).setTextColor(getResources().getColor(R.color.white));
+                    ((TextView) filterPriceUp.findViewById(R.id.filterPriceUpText)).setTextColor(getResources().getColor(R.color.appBlue));
+                    ((TextView) filterPriceDown.findViewById(R.id.filterPriceDownText)).setTextColor(getResources().getColor(R.color.appBlue));
+                    filterDate.setBackgroundResource(R.drawable.border_filter_left_active);
+                    filterPriceUp.setBackgroundResource(R.drawable.border_filter_center);
+                    filterPriceDown.setBackgroundResource(R.drawable.border_filter_right);
+                    sortRequest("");
+                }
+            }
+        });
+
+        filterPriceUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(filterButtonActivePos != 1){
+                    filterButtonActivePos = 1;
+                    ((TextView) filterDate.findViewById(R.id.filterDateText)).setTextColor(getResources().getColor(R.color.appBlue));
+                    ((TextView) filterPriceUp.findViewById(R.id.filterPriceUpText)).setTextColor(getResources().getColor(R.color.white));
+                    ((TextView) filterPriceDown.findViewById(R.id.filterPriceDownText)).setTextColor(getResources().getColor(R.color.appBlue));
+                    filterDate.setBackgroundResource(R.drawable.border_filter_left);
+                    filterPriceUp.setBackgroundResource(R.drawable.border_filter_center_active);
+                    filterPriceDown.setBackgroundResource(R.drawable.border_filter_right);
+                    sortRequest("&sort=cost_out");
+                }
+            }
+        });
+
+        filterPriceDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(filterButtonActivePos != 2){
+                    filterButtonActivePos = 2;
+                    ((TextView) filterDate.findViewById(R.id.filterDateText)).setTextColor(getResources().getColor(R.color.appBlue));
+                    ((TextView) filterPriceUp.findViewById(R.id.filterPriceUpText)).setTextColor(getResources().getColor(R.color.appBlue));
+                    ((TextView) filterPriceDown.findViewById(R.id.filterPriceDownText)).setTextColor(getResources().getColor(R.color.white));
+                    filterDate.setBackgroundResource(R.drawable.border_filter_left);
+                    filterPriceUp.setBackgroundResource(R.drawable.border_filter_center);
+                    filterPriceDown.setBackgroundResource(R.drawable.border_filter_right_active);
+                    sortRequest("&sort=-cost_out");
+                }
+            }
+        });
+
+    }
+
+    private void sortRequest(String sortString){
+        if(isLoading == true){
+            backendAsync.cancel(true);
+        }
+        objects = new ArrayList<Objects>();
+        adapter.clear();
+        adapter = new ObjectAdapter(getActivity(), R.layout.objects_list_item, objects);
+        objectsList.setAdapter(adapter);
+
+        page = 1;
+        if(isUploaded == true){
+            isUploaded = false;
+            loadingFooter = factory.inflate(R.layout.list_loader, null);
+            objectsList.addFooterView(loadingFooter);
+        }
+
+        loadingFooter.setVisibility(View.VISIBLE);
+        isLoading = true;
+        backendAsync = Backend.getObjects(getActivity(), fragment, urlRequest + sortString, page);
+        backendAsync.execute();
 
     }
 
@@ -278,6 +362,7 @@ public class CategoryObjectsFragment extends Fragment {
                     objectsList.setVisibility(View.GONE);
                 }
                 this.isUploaded = true;
+
                 objectsList.removeFooterView(loadingFooter);
             } else {
                 objNumber = objects.size();
