@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    android:background="@color/whiteGrey"
+    tools:context="com.example.a24814.qzalog.ObjectDetailActivity">
+
+    <TextView
+        android:textAppearance="@style/infoText"
+        android:text="Qzalog – мобильное приложение портала qzalog.kz,  в котором отображены все актуальные объявления о продаже движимого и недвижимого имущества, принятого на баланс Банка."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:textAppearance="@style/infoText"
+        android:text="Уникальная возможность приобрести объекты, находящиеся в собственности Банка по льготным условиям.  "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

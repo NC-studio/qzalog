@@ -41,6 +41,7 @@
         <activity android:name=".GalleryActivity" />
         <activity android:name=".SelectedObjectsActivity"></activity>
         <activity android:name=".LikedObjectsActivity"></activity>
+        <activity android:name=".InfoActivity"></activity>
     </application>
 
 </manifest>

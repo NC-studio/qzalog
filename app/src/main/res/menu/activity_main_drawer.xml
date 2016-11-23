@@ -2,16 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+
+            android:textAppearance="@style/TextNavTitle"
             android:id="@+id/nav_search"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_search"
             android:title="Поиск" />
         <item
             android:id="@+id/nav_liked"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_liked"
             android:title="Избранное" />
         <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_about"
             android:title="О приложении" />
     </group>
 </menu>

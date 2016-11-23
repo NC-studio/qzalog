@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle toggle;
 
     private Activity activity;
+
+    private NavigationView n;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         activity = this;
@@ -74,20 +76,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
 
-        NavigationView n = (NavigationView) findViewById(R.id.nav_view);
+        n = (NavigationView) findViewById(R.id.nav_view);
         n.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+                Intent intent;
                 switch (menuItem.getItemId()) {
                     case R.id.nav_liked:
-                        Intent intent = new Intent(activity, LikedObjectsActivity.class);
+                        intent = new Intent(activity, LikedObjectsActivity.class);
                         startActivity(intent);
+                        break;
+                    case R.id.nav_about:
+                        intent = new Intent(activity, InfoActivity.class);
+                        startActivity(intent);
+                        break;
+
                 }
                 drawer.closeDrawers();
                 return true;
             }
         });
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        n.getMenu().getItem(0).setChecked(true);
+    }
+
+
 
     private void initFragment(Bundle savedInstanceState){
         flContent = (FrameLayout) findViewById(R.id.flContent);
@@ -105,6 +123,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+
+
         return true;
     }
 
