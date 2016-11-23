@@ -71,15 +71,11 @@ public class ObjectDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         fragment = this;
         view = inflater.inflate(R.layout.activity_object_detail,
                 container, false);
-
-
         initView();
         initIbject();
-
         return view;
     }
 
@@ -131,7 +127,7 @@ public class ObjectDetailFragment extends Fragment {
 
 
             if (object.getDiscount() != null && !object.getDiscount().isEmpty()) {
-                TextView textView = (TextView) view.findViewById(R.id.price);
+                TextView textView = (TextView) view.findViewById(R.id.discount);
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(object.getDiscount());
             }
@@ -243,7 +239,7 @@ public class ObjectDetailFragment extends Fragment {
             ((BaseFile) getActivity().getApplication()).setImages(images);
             ((BaseFile) getActivity().getApplication()).setImagesAmount(imageAmount);
 
-
+            imageAmountTextView.setText(String.valueOf(previusPosition + 1) + "/" + String.valueOf(imageAmount));
             horizontalAdapter = new HorizontalAdapter(horizontalList);
             horizontalLayoutManagaer
                     = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     case R.id.nav_liked:
                         Intent intent = new Intent(activity, LikedObjectsActivity.class);
                         startActivity(intent);
-                        return true;
                 }
                 drawer.closeDrawers();
                 return true;

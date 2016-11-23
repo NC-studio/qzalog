@@ -93,7 +93,7 @@
 
     <style name="ObjectDiscount">
         <item name="android:textSize">16dp</item>
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/greyText</item>
     </style>
 
     <style name="ObjectDate">

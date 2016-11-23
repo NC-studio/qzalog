@@ -4,6 +4,7 @@ package com.example.a24814.qzalog.components;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -138,6 +139,8 @@ public class FromCreator {
          */
         List<SimpleSpinnerValue> spinner_list = field.getJsonList();
 
+
+
         /**
          * Creates and fills array for spinner, alse it creates Hash map for select Events
          */
@@ -179,12 +182,17 @@ public class FromCreator {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
                 if(position > 0){
                     String key = field.getList().get(position);
                     field.setSelectedValue(key);
+
+                    Log.d("category", field.getList().toString());
+
                 }else{
                     field.setSelectedValue(null);
                 }
+
 
             }
             @Override

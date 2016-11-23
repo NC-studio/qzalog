@@ -34,6 +34,8 @@ public class CategoryFragment extends Fragment {
 
     private ArrayAdapter<Category> adapter;
 
+    private Boolean uploaded = false;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,25 +58,28 @@ public class CategoryFragment extends Fragment {
     }
 
     private void initAdapter(){
-        categories = ((BaseFile) getActivity().getApplication()).getCategories();
-        getCategories();
+        if(uploaded == false) {
+            categories = ((BaseFile) getActivity().getApplication()).getCategories();
 
-        adapter = new CategoryAdapter(getActivity(), R.layout.category_item, categories);
-        categoryList.setAdapter(adapter);
+            getCategories();
 
-        categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
-                                    long arg3) {
-                try {
-                    Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                    intent.putExtra("category", arg2);
-                    startActivity(intent);
-                } catch ( IndexOutOfBoundsException e ) {
-                    Log.d(TAG, e.getMessage());
+            adapter = new CategoryAdapter(getActivity(), R.layout.category_item, categories);
+            categoryList.setAdapter(adapter);
+
+            categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
+                                        long arg3) {
+                    try {
+                        Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                        intent.putExtra("category", arg2);
+                        startActivity(intent);
+                    } catch (IndexOutOfBoundsException e) {
+                        Log.d(TAG, e.getMessage());
+                    }
                 }
-            }
-        });
+            });
+        }
 
     }
 
@@ -135,6 +140,7 @@ public class CategoryFragment extends Fragment {
     }
 
     public void  backendResponse(){
+        uploaded = true;
         adapter.notifyDataSetChanged();
     }
 

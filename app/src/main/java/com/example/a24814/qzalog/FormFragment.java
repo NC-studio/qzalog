@@ -61,6 +61,8 @@ public class FormFragment extends Fragment {
 
     private Boolean generated = false;
 
+    private Integer previusCategory;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -106,7 +108,7 @@ public class FormFragment extends Fragment {
 
                 ((BaseFile) getActivity().getApplication()).addToFormHistory();
                 Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                intent.putExtra("categoryId", ((FormActivity)getActivity()).getCategory().getObjectId());
+                intent.putExtra("category", ((FormActivity)getActivity()).getCategoryPosition());
                 startActivity(intent);
 
 
@@ -137,10 +139,13 @@ public class FormFragment extends Fragment {
         }catch (JSONException e){
             Log.d(TAG, e.getMessage());
         }
-        fields = ((FormActivity)getActivity()).getFields();
-        if(fields.size() > 0){
-            if(generated == false)
+
+
+        if(fields.size() > 0 && ((FormActivity)getActivity()).getCategoryChanged() == false){
+            if(generated == false){
+                fields = ((BaseFile) getActivity().getApplication()).getFields();
                 parseSavedList();
+            }
         }else{
             parseJson();
         }
@@ -218,6 +223,8 @@ public class FormFragment extends Fragment {
                         while (iterInner.hasNext()) {
                             String keyInner = iterInner.next();
                             JSONObject valueInner = jsonList.getJSONObject(keyInner);
+
+
                             SimpleSpinnerValue simpleSpinnerValue = new SimpleSpinnerValue(valueInner.getString("id"), valueInner.getString("name"), Integer.valueOf(keyInner));
                             spinner_values.add(simpleSpinnerValue);
                         }
@@ -229,6 +236,7 @@ public class FormFragment extends Fragment {
                             }
                         });
                     }
+
                     Form field = new Form(id, title, name, name2, unit_of_measure, placeholder, type, spinner_values, position);
                     fields.add(field);
 
@@ -257,8 +265,8 @@ public class FormFragment extends Fragment {
             }
 
             ((BaseFile) getActivity().getApplication()).setFields(fields);
-        }catch (Throwable t) {
-            Log.d(TAG, t.getMessage());
+        }catch (Exception e) {
+
         }
     }
 
@@ -275,15 +283,12 @@ public class FormFragment extends Fragment {
 
     private String generateUrlRequest(){
         String url = Defaults.CATEGORY_PATH;
-
         Integer category_id = ((FormActivity)getActivity()).getCategoryId();
         url = url + "?category="+String.valueOf(category_id);
         url = url + "&ObjectsSearch[region_id]=";
         if(regionId != null){
             url = url +  regionId;
         }
-
-
         for (Form field : fields) {
            if(field.getType() == 1){
                if(field.getSelectedValue() != null){

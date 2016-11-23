@@ -31,7 +31,7 @@ public class CategoryActivity extends AppCompatActivity {
 
     private Integer previusCategory;
 
-
+    private Boolean categoryChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +51,20 @@ public class CategoryActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             categoryPosition = extras.getInt("category");
+
+
+
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
 
             previusCategory = ((BaseFile) getApplication()).getCategoryId();
             if(previusCategory == null || previusCategory != category.getObjectId()){
+                categoryChanged = true;
                 ((BaseFile) getApplication()).setCategoryId( category.getObjectId());
                 String url = Defaults.CATEGORY_PATH + "?category="+String.valueOf(category.getObjectId());
-               // ((BaseFile) getApplication()).setPage(1);
                 ((BaseFile) getApplication()).setUrl(url);
                 ((BaseFile) getApplication()).setObjects(new ArrayList<Objects>());
-
                 ((BaseFile) getApplication()).setFormHistory();
 
             }
@@ -114,6 +116,7 @@ public class CategoryActivity extends AppCompatActivity {
         if (id == R.id.action_search) {
             Intent intent = new Intent(this, FormActivity.class);
             intent.putExtra("category", categoryPosition);
+            intent.putExtra("categoryChanged", categoryChanged);
             startActivity(intent);
             return true;
         }

@@ -40,7 +40,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:text="1/5"
                     android:textColor="@color/white"
                     android:id="@+id/imageAmount"
                     android:background="@color/blueImageNumber"

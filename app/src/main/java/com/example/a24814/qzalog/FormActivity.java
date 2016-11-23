@@ -15,11 +15,9 @@ import android.widget.TextView;
 import com.example.a24814.qzalog.components.BaseFile;
 import com.example.a24814.qzalog.components.DataBaseAdapter;
 import com.example.a24814.qzalog.models.Category;
-import com.example.a24814.qzalog.models.Form;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FormActivity extends AppCompatActivity {
@@ -32,14 +30,11 @@ public class FormActivity extends AppCompatActivity {
 
     private JSONObject formObject;
 
-    private Integer previusCategory;
-
-    private List<Form> fields = new ArrayList<Form>();
-
     private View view;
 
     FrameLayout flContent;
 
+    private Boolean  categoryChanged = true;
 
 
     @Override
@@ -59,6 +54,8 @@ public class FormActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             categoryPosition = extras.getInt("category");
+            categoryChanged = extras.getBoolean("categoryChanged");
+
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
             category = categories.get(categoryPosition);
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
@@ -68,18 +65,11 @@ public class FormActivity extends AppCompatActivity {
             formObject = myDatabaseHelper.getForm(category.getObjectId());
             myDatabaseHelper.close();
 
-            //previusCategory = ((BaseFile) getApplication()).getCategoryId();
-           // if(previusCategory == null || previusCategory != extras.getInt("category")){
-              //  previusCategory =  extras.getInt("category");
-               // ((BaseFile) getApplication()).setCategoryId( previusCategory);
 
-           // }else{
-
-            //}
         }
 
 
-        fields = ((BaseFile) getApplication()).getFields();
+
 
         initFragment(savedInstanceState);
 
@@ -163,28 +153,18 @@ public class FormActivity extends AppCompatActivity {
         return category.getObjectId();
     }
 
-    public List<Form> getFields() {
-        return fields;
+    public Integer getCategoryPosition() {
+        return  categoryPosition;
     }
 
     public Category getCategory() {
         return category;
     }
 
-    /*public void setClearedHistory(Boolean clearedHistory){
-        this.clearedHistory = clearedHistory;
+
+    public Boolean getCategoryChanged() {
+        return categoryChanged;
     }
-
-    public void setSended(Boolean sended){
-        this.sended = sended;
-    }
-
-    public void setRegionSelecting(Boolean regionSelecting){
-        this.regionSelecting = regionSelecting;
-    }*/
-
-
-
 
     @Override
     public void onResume()
@@ -200,6 +180,8 @@ public class FormActivity extends AppCompatActivity {
 
         finish();
     }
+
+
 
 
 }
