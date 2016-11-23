@@ -11,13 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class ListActivity extends AppCompatActivity {
 
     private Integer parent;
-    private final String TAG = "CategoryActivity";
 
     public static Integer numberOfPage = 1;
 
@@ -61,21 +59,14 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void initFragment(Bundle savedInstanceState){
-        FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
-
         if (savedInstanceState == null) {
-
             Fragment newFragment = new RegionFragment();
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
-            // fragmentTransaction.replace(android.R.id.content, newFragment);
             fragmentTransaction.add(R.id.flContent, newFragment);
             fragmentTransaction.commit();
-
         }
-
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);

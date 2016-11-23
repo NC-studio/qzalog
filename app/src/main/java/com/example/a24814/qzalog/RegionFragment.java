@@ -109,6 +109,8 @@ public class RegionFragment extends Fragment {
                         }
                     }else{
                         if(((ListActivity) getActivity()).numberOfPage == 1){
+                            Log.d("aaa", "Asdas");
+
                             formRegion = new JSONObject();
                             ((BaseFile) getActivity().getApplication()).setFormRegion(formRegion);
                         }

@@ -126,16 +126,22 @@ public class FormFragment extends Fragment {
         super.onResume();
         JSONObject formRegion = ((BaseFile) getActivity().getApplication()).getFormRegion();
         try {
-            String regionIdValue = formRegion.getString("id");
-            if(regionIdValue != null){
-                regionId = regionIdValue;
-            }
-            String regionName = formRegion.getString("name");
-            if(regionName != null){
-                ((TextView) view.findViewById(R.id.regionText)).setText(regionName);
+            if(formRegion.has("id")){
+                String regionIdValue = formRegion.getString("id");
+                if(regionIdValue != null){
+                    regionId = regionIdValue;
+                }
+                String regionName = formRegion.getString("name");
+                if(regionName != null){
+                    ((TextView) view.findViewById(R.id.regionText)).setText(regionName);
+                }else{
+                    ((TextView) view.findViewById(R.id.regionText)).setText(getResources().getString(R.string.form_default));
+                }
             }else{
+                regionId = null;
                 ((TextView) view.findViewById(R.id.regionText)).setText(getResources().getString(R.string.form_default));
             }
+
         }catch (JSONException e){
             Log.d(TAG, e.getMessage());
         }

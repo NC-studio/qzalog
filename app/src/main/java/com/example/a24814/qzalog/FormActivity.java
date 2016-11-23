@@ -69,8 +69,6 @@ public class FormActivity extends AppCompatActivity {
         }
 
 
-
-
         initFragment(savedInstanceState);
 
 
@@ -117,28 +115,8 @@ public class FormActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_cancel) {
-
             FormFragment fragment = (FormFragment) getSupportFragmentManager().findFragmentById(R.id.flContent);
             fragment.clearForm();
-
-
-          /*  ViewGroup group = (ViewGroup)findViewById(R.id.flContent);
-            Log.d("testio", String.valueOf(group.getChildCount()));
-
-            ArrayList<EditText> EditTextList = new ArrayList<EditText>();
-
-            for( int i = 0; i < flContent.getChildCount(); i++ ) {
-
-                Log.d("testio", flContent.getChildAt(i).toString());
-                if (flContent.getChildAt(i) instanceof EditText) {
-
-                    ((EditText) flContent.getChildAt(i)).setText("");
-                }
-
-            }
-*/
-
-
             return true;
         }
 
@@ -161,27 +139,14 @@ public class FormActivity extends AppCompatActivity {
         return category;
     }
 
-
     public Boolean getCategoryChanged() {
         return categoryChanged;
     }
 
     @Override
-    public void onResume()
-    {
-
-
-        super.onResume();  // optional depending on your needs
-    }
-
-    @Override
     public void onBackPressed()
     {
-
         finish();
     }
-
-
-
 
 }
