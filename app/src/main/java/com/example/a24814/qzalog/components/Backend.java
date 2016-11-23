@@ -127,11 +127,8 @@ public class Backend {
             @Override
             public void handleResponse( List<Objects> clones )
             {
-                Log.d("testtest", String.valueOf(clones.size()));
                 super.handleResponse( clones );
                 fragment.backendResponse(clones);
-
-
             }
         };
     }

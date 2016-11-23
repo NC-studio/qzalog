@@ -4,7 +4,6 @@ package com.example.a24814.qzalog.components;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -186,14 +185,9 @@ public class FromCreator {
                 if(position > 0){
                     String key = field.getList().get(position);
                     field.setSelectedValue(key);
-
-                    Log.d("category", field.getList().toString());
-
                 }else{
                     field.setSelectedValue(null);
                 }
-
-
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {

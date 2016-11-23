@@ -313,8 +313,6 @@ public class FormFragment extends Fragment {
 
     public void clearForm(){
         for (Form field : fields) {
-
-            Log.d("testio", String.valueOf(field.getType()));
             if(field.getSelectedValue() != null){
                 View v = field.getView();
                 field.setSelectedValue(null);
