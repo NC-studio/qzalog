@@ -110,29 +110,31 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
         }
 
         if (id == R.id.action_like) {
-            Objects object = ((BaseFile) getApplication()).getObjectModel();
-            DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(this, true);
-            Boolean liked = myDatabaseHelper.manageLiked(object.getId());
-            myDatabaseHelper.close();
-            if(liked){
-                item.setIcon(getResources().getDrawable(R.drawable.ic_star_active));
-            }else{
-                item.setIcon(getResources().getDrawable(R.drawable.ic_star));
+            try {
+                Objects object = ((BaseFile) getApplication()).getObjectModel();
+                DataBaseAdapter myDatabaseHelper = new DataBaseAdapter(this, true);
+                Boolean liked = myDatabaseHelper.manageLiked(object.getId());
+                myDatabaseHelper.close();
+                if (liked) {
+                    item.setIcon(getResources().getDrawable(R.drawable.ic_star_active));
+                } else {
+                    item.setIcon(getResources().getDrawable(R.drawable.ic_star));
+                }
+                object.setLiked(liked);
+
+                //Не уверен что критично важно и сильно помогает делу
+                ((BaseFile) getApplication()).setObjectModel(object);
+                List<Objects> objects = ((BaseFile) getApplication()).getObjects();
+                Objects objectSelected = objects.get(objPos);
+                objectSelected.setLiked(liked);
+                if (liked) {
+                    objectSelected.setLikerIcon(getResources().getDrawable(R.drawable.ic_liked_active));
+                } else {
+                    objectSelected.setLikerIcon(getResources().getDrawable(R.drawable.ic_liked));
+                }
+
+            }catch(Exception e){
             }
-            object.setLiked(liked);
-
-            //Не уверен что критично важно и сильно помогает делу
-            ((BaseFile) getApplication()).setObjectModel(object);
-            List<Objects> objects = ((BaseFile) getApplication()).getObjects();
-            Objects objectSelected = objects.get(objPos);
-            objectSelected.setLiked(liked);
-            if(liked){
-                objectSelected.setLikerIcon(getResources().getDrawable(R.drawable.ic_liked_active));
-            }else{
-                objectSelected.setLikerIcon(getResources().getDrawable(R.drawable.ic_liked));
-            }
-
-
 
             return true;
         }

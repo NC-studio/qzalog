@@ -104,6 +104,17 @@ public class CategoryFragment extends Fragment {
             this.data = data;
         }
 
+        @Override
+        public int getViewTypeCount() {
+
+            return getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+
+            return position;
+        }
 
         public View getView(int position, View convertView, ViewGroup parent)
         {
