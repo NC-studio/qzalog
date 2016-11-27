@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,6 +38,8 @@ public class CategoryFragment extends Fragment {
 
     private Boolean uploaded = false;
 
+    private FrameLayout pageLink;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +64,7 @@ public class CategoryFragment extends Fragment {
     private void initAdapter(){
         if(uploaded == false) {
             categories = ((BaseFile) getActivity().getApplication()).getCategories();
+            categories.add(new Category("Cпособы приобритения имущества"));
 
             getCategories();
 
@@ -71,13 +75,20 @@ public class CategoryFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
                                         long arg3) {
-                    try {
-                        Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                        intent.putExtra("category", arg2);
+                    Category category = adapter.getItem(arg2);
+                    if(category.getType() == 0){
+                        try {
+                            Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                            intent.putExtra("category", arg2);
+                            startActivity(intent);
+                        } catch (IndexOutOfBoundsException e) {
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }else{
+                        Intent intent = new Intent(getActivity(), Info2Activity.class);
                         startActivity(intent);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.d(TAG, e.getMessage());
                     }
+
                 }
             });
         }
@@ -106,23 +117,31 @@ public class CategoryFragment extends Fragment {
 
         @Override
         public int getViewTypeCount() {
-
             return getCount();
         }
 
         @Override
         public int getItemViewType(int position) {
-
-            return position;
+            return getItem(position).getType();
         }
+
 
         public View getView(int position, View convertView, ViewGroup parent)
         {
             final ViewHolder holder;
 
+
+            int listViewItemType = getItemViewType(position);
+
+
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(getContext()).inflate(layoutResourceId, parent, false);
+                if (listViewItemType == 1) {
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.category_item_top, parent, false);
+                } else {
+                    convertView = LayoutInflater.from(getContext()).inflate(layoutResourceId, parent, false);
+                }
+
 
                 holder.name = (TextView) convertView.findViewById(R.id.name);
                 holder.icon = (ImageView) convertView.findViewById(R.id.icon);

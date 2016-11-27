@@ -38,6 +38,10 @@ public class BaseFile extends Application {
 
     private Integer imagesAmount = 1;
 
+    public void setCategories(List<Category> categories) {
+        this.cagegoryList = categories;
+    }
+
     public List<Category> getCategories() {
         return this.cagegoryList;
     }

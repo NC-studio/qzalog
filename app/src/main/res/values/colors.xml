@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="appBlue">#006790</color>
+    <color name="appYellow">#ffb900</color>
+    <color name="appYellowTaped">#cc9400</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey">#e7e6e6</color>

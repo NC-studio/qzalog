@@ -93,6 +93,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         intent = new Intent(activity, InfoActivity.class);
                         startActivity(intent);
                         return true;
+                    case R.id.nav_way:
+                        intent = new Intent(activity, Info2Activity.class);
+                        startActivity(intent);
+                        return true;
+
                 }
                 drawer.closeDrawers();
                 return true;
