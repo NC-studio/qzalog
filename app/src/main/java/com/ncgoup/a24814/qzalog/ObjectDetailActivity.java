@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.R;
@@ -70,18 +69,12 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
     }
 
     private void initFragment(Bundle savedInstanceState){
-        FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
         if (savedInstanceState == null) {
-
             Fragment newFragment = new ObjectDetailFragment();
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
-            // fragmentTransaction.replace(android.R.id.content, newFragment);
-
             fragmentTransaction.add(R.id.flContent, newFragment);
-
             fragmentTransaction.commit();
         }
 
@@ -90,7 +83,6 @@ public class ObjectDetailActivity extends AppCompatActivity implements Navigatio
 
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
         getMenuInflater().inflate(R.menu.main, menu);
         mapIcon = menu.findItem(R.id.action_map);
         likeIcon = menu.findItem(R.id.action_like);

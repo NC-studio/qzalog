@@ -68,6 +68,9 @@ public class ObjectDetailFragment extends Fragment {
 
     private int previusPosition = 0;
 
+    private ImageView leftArrow;
+
+    private ImageView rightArrow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +92,9 @@ public class ObjectDetailFragment extends Fragment {
 
         horizontal_recycler_view= (RecyclerView) view.findViewById(R.id.horizontal_recycler_view);
         imageAmountTextView = (TextView) view.findViewById(R.id.imageAmount);
+
+        leftArrow = (ImageView) view.findViewById(R.id.leftArrow);
+        rightArrow = (ImageView) view.findViewById(R.id.rightArrow);
     }
 
     private void initIbject(){
@@ -241,6 +247,11 @@ public class ObjectDetailFragment extends Fragment {
             ((BaseFile) getActivity().getApplication()).setImagesAmount(imageAmount);
 
             imageAmountTextView.setText(String.valueOf(previusPosition + 1) + "/" + String.valueOf(imageAmount));
+            if(imageAmount > 1){
+                rightArrow.setVisibility(View.VISIBLE);
+            }
+
+
             horizontalAdapter = new HorizontalAdapter(horizontalList);
             horizontalLayoutManagaer
                     = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -253,10 +264,40 @@ public class ObjectDetailFragment extends Fragment {
                     super.onScrolled(recyclerView, dx, dy);
                     if (previusPosition != horizontalLayoutManagaer.findFirstVisibleItemPosition()) {
                         previusPosition = horizontalLayoutManagaer.findFirstVisibleItemPosition();
-                        imageAmountTextView.setText(String.valueOf(previusPosition + 1) + "/" + String.valueOf(imageAmount));
+                        int currPosition = previusPosition + 1;
+                        imageAmountTextView.setText(String.valueOf(currPosition) + "/" + String.valueOf(imageAmount));
+                        if(currPosition == imageAmount ){
+                            rightArrow.setVisibility(View.GONE);
+                        }else{
+                            rightArrow.setVisibility(View.VISIBLE);
+                            if(currPosition == 1 ){
+                                leftArrow.setVisibility(View.GONE);
+                            }else{
+                                leftArrow.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                 }
             });
+
+            leftArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(previusPosition > 0) {
+                        horizontal_recycler_view.scrollToPosition(previusPosition - 1);
+                    }
+                }
+            });
+            rightArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(previusPosition < imageAmount) {
+                        horizontal_recycler_view.scrollToPosition(previusPosition + 1);
+                    }
+                }
+            });
+
+
         }
     }
 

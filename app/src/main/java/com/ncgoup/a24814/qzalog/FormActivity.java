@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.R;
@@ -30,10 +29,6 @@ public class FormActivity extends AppCompatActivity {
     private Integer categoryPosition;
 
     private JSONObject formObject;
-
-    private View view;
-
-    FrameLayout flContent;
 
     private Boolean  categoryChanged = true;
 
@@ -68,30 +63,23 @@ public class FormActivity extends AppCompatActivity {
 
 
         }
-
-
         initFragment(savedInstanceState);
-
-
-        //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
     }
 
     private void initFragment(Bundle savedInstanceState){
-        flContent = (FrameLayout) findViewById(R.id.flContent);
+
         if (savedInstanceState == null) {
             Fragment newFragment = new FormFragment();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
-            // fragmentTransaction.replace(android.R.id.content, newFragment);
             fragmentTransaction.add(R.id.flContent, newFragment);
             fragmentTransaction.commit();
         }

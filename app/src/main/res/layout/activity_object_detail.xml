@@ -39,6 +39,22 @@
                     android:background="#fff"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/leftArrow"
+                    android:layout_centerVertical="true"
+                    android:layout_alignLeft="@+id/horizontal_recycler_view"
+                    android:src="@drawable/left_24dip_xxhdpi"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/rightArrow"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/horizontal_recycler_view"
+                    android:src="@drawable/right_24dip_xxhdpi"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content" />
                 <TextView
                     android:textColor="@color/white"
                     android:id="@+id/imageAmount"

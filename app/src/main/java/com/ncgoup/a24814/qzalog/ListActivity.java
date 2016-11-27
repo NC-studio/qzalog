@@ -45,8 +45,6 @@ public class ListActivity extends AppCompatActivity {
         }
 
         initFragment(savedInstanceState);
-
-        //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

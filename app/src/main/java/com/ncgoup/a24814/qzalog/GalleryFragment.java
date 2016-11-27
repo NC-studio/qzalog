@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,7 +47,9 @@ public class GalleryFragment extends Fragment {
 
     private TextView toolbarText;
 
+    private ImageView leftArrow;
 
+    private ImageView rightArrow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,13 +74,27 @@ public class GalleryFragment extends Fragment {
                 JSONObject value = images.getJSONObject(key);
                 horizontalList.add(new SimpleImageModel(value.get("big").toString(), Integer.valueOf(key)));
             }
+            Collections.sort(horizontalList, new Comparator<SimpleImageModel>(){
+                public int compare(SimpleImageModel emp1, SimpleImageModel emp2) {
+                    return emp1.getPosition().compareTo(emp2.getPosition());
+                }
+            });
 
 
         } catch (JSONException e) {
-            Log.d("testio",e.getMessage());
-        }
-        toolbarText = ((GalleryActivity)getActivity()).getToolbarText();
 
+        }
+
+        //Setting starting visibility of arrows
+        if(previusPosition < imagesAmount && imagesAmount > 1){
+            rightArrow.setVisibility(View.VISIBLE);
+        }
+        if(previusPosition > 0){
+            leftArrow.setVisibility(View.VISIBLE);
+        }
+
+
+        toolbarText = ((GalleryActivity)getActivity()).getToolbarText();
         horizontalAdapter=new HorizontalAdapter(horizontalList);
         horizontalLayoutManagaer
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -92,9 +109,41 @@ public class GalleryFragment extends Fragment {
                 if(previusPosition != horizontalLayoutManagaer.findFirstVisibleItemPosition()){
                     previusPosition = horizontalLayoutManagaer.findFirstVisibleItemPosition();
                     toolbarText.setText("Изображение " + String.valueOf(previusPosition + 1) +  "/" + String.valueOf(imagesAmount));
+
+                    int currPosition = previusPosition + 1;
+                    if(currPosition == imagesAmount ){
+                        rightArrow.setVisibility(View.GONE);
+                    }else{
+                        rightArrow.setVisibility(View.VISIBLE);
+                        if(currPosition == 1 ){
+                            leftArrow.setVisibility(View.GONE);
+                        }else{
+                            leftArrow.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+
                 }
             }
         });
+
+        leftArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(previusPosition > 0) {
+                    horizontal_recycler_view.scrollToPosition(previusPosition - 1);
+                }
+            }
+        });
+        rightArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(previusPosition < imagesAmount) {
+                    horizontal_recycler_view.scrollToPosition(previusPosition + 1);
+                }
+            }
+        });
+
 
 
         return view;
@@ -102,7 +151,8 @@ public class GalleryFragment extends Fragment {
 
     private void initView(){
         horizontal_recycler_view = (RecyclerView) view.findViewById(R.id.horizontal_recycler_view);
-
+        leftArrow = (ImageView) view.findViewById(R.id.leftArrow);
+        rightArrow = (ImageView) view.findViewById(R.id.rightArrow);
     }
 
     public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.MyViewHolder> {

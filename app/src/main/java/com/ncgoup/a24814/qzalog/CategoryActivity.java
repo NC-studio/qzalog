@@ -7,10 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.R;
@@ -52,9 +52,6 @@ public class CategoryActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             categoryPosition = extras.getInt("category");
-
-
-
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
@@ -70,6 +67,10 @@ public class CategoryActivity extends AppCompatActivity {
 
             }
         }
+
+
+
+
         initFragment(savedInstanceState);
         //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -82,14 +83,11 @@ public class CategoryActivity extends AppCompatActivity {
 
 
     private void initFragment(Bundle savedInstanceState){
-        FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
-
         if (savedInstanceState == null) {
             Fragment newFragment = new CategoryObjectsFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
-            // fragmentTransaction.replace(android.R.id.content, newFragment);
             fragmentTransaction.add(R.id.flContent, newFragment);
             fragmentTransaction.commit();
         }
@@ -124,7 +122,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         if (id == R.id.action_map) {
             Intent intent = new Intent(this, MapActivity.class);
-            intent.putExtra("categoryId", categoryPosition);
+            intent.putExtra("category", categoryPosition);
             startActivity(intent);
             return true;
         }

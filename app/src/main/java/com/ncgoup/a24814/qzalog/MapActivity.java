@@ -7,13 +7,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.R;
+import com.google.android.gms.maps.MapsInitializer;
 import com.ncgoup.a24814.qzalog.components.BaseFile;
 import com.ncgoup.a24814.qzalog.models.Category;
-import com.google.android.gms.maps.MapsInitializer;
 
 import java.util.List;
 
@@ -47,6 +46,7 @@ public class MapActivity extends AppCompatActivity {
                 category = categories.get(categoryPosition);
                 ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
                 urlRequest = ((BaseFile) getApplication()).getUrl() + "&map=1";
+
             }
         }
 
@@ -67,18 +67,12 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void initFragment(Bundle savedInstanceState){
-        FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
         if (savedInstanceState == null) {
-
             Fragment newFragment = new MapFragment();
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
-            // fragmentTransaction.replace(android.R.id.content, newFragment);
-
             fragmentTransaction.add(R.id.flContent, newFragment);
-
             fragmentTransaction.commit();
         }
 

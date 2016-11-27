@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.a24814.qzalog.R;
@@ -43,18 +42,12 @@ public class SelectedObjectsActivity extends AppCompatActivity {
 
 
     private void initFragment(Bundle savedInstanceState){
-        FrameLayout flContent = (FrameLayout) findViewById(R.id.flContent);
         if (savedInstanceState == null) {
-
             Fragment newFragment = new SelectedObjectsFragment();
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction =
                     fragmentManager.beginTransaction();
-            // fragmentTransaction.replace(android.R.id.content, newFragment);
-
             fragmentTransaction.add(R.id.flContent, newFragment);
-
             fragmentTransaction.commit();
         }
 
