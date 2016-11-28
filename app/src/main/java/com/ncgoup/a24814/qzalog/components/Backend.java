@@ -11,7 +11,7 @@ import com.ncgoup.a24814.qzalog.CategoryObjectsFragment;
 import com.ncgoup.a24814.qzalog.LikedObjectsFragment;
 import com.ncgoup.a24814.qzalog.MapFragment;
 import com.ncgoup.a24814.qzalog.ObjectDetailFragment;
-import com.example.a24814.qzalog.R;
+import com.ncgoup.a24814.qzalog.R;
 import com.ncgoup.a24814.qzalog.SelectedObjectsFragment;
 import com.ncgoup.a24814.qzalog.models.Category;
 import com.ncgoup.a24814.qzalog.models.MapObject;

@@ -17,7 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.example.a24814.qzalog.R;
+
 import com.ncgoup.a24814.qzalog.components.DataBaseAdapter;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;

@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.a24814.qzalog.R;
+
 import com.google.android.gms.maps.MapsInitializer;
 import com.ncgoup.a24814.qzalog.components.BaseFile;
 import com.ncgoup.a24814.qzalog.models.Category;

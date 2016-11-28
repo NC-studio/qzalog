@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 
-import com.example.a24814.qzalog.R;
+import com.ncgoup.a24814.qzalog.R;
+
 
 /**
  * Created by 24814 on 11/17/2016.

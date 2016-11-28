@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.a24814.qzalog.R;
+
 import com.ncgoup.a24814.qzalog.components.BaseFile;
 import com.ncgoup.a24814.qzalog.components.DataBaseAdapter;
 import com.ncgoup.a24814.qzalog.models.Category;

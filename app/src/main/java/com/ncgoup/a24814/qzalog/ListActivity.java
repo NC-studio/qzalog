@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.a24814.qzalog.R;
+
 
 public class ListActivity extends AppCompatActivity {
 

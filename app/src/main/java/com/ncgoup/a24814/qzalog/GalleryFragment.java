@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.a24814.qzalog.R;
+
 import com.ncgoup.a24814.qzalog.components.BaseFile;
 import com.ncgoup.a24814.qzalog.models.SimpleImageModel;
 import com.squareup.picasso.Picasso;
