@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,7 +220,7 @@ public class LikedObjectsFragment extends Fragment {
 
     public void backendResponse(List<Objects> clones){
 
-       if(!clones.isEmpty()){
+       if(clones != null && !clones.isEmpty()){
            for (Objects item : clones) {
                objects.add(item);
            }
@@ -227,8 +228,11 @@ public class LikedObjectsFragment extends Fragment {
            objectsList.requestLayout();
            objectsList.removeFooterView(loadingFooter);
        }else{
+           objectsList.removeFooterView(loadingFooter);
+           objectsList.setVisibility(View.GONE);
            noFoundBlock.setVisibility(View.VISIBLE);
        }
+
 
 
     }

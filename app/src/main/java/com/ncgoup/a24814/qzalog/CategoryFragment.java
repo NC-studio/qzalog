@@ -46,14 +46,25 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.category_item_list,
                 container, false);
+        initView();
 
+        if (savedInstanceState != null)
+        {
+            //Log.v("Main", savedInstanceState.getString("loaded"));
+        }
         initView();
         initAdapter();
+
 
         return view;
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState)
+    {
+        //savedInstanceState.putInt("loaded", 1);
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
     private void initView(){
         categoryList = (ListView) view.findViewById(R.id.categorylist);
@@ -64,9 +75,10 @@ public class CategoryFragment extends Fragment {
     private void initAdapter(){
         if(uploaded == false) {
             categories = ((BaseFile) getActivity().getApplication()).getCategories();
-            categories.add(new Category("Cпособы приобритения имущества"));
-
-            getCategories();
+            if(categories.size() == 0) {
+                categories.add(new Category("Cпособы приобритения имущества"));
+                getCategories();
+            }
 
             adapter = new CategoryAdapter(getActivity(), R.layout.category_item, categories);
             categoryList.setAdapter(adapter);

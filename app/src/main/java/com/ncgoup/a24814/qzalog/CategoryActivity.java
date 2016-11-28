@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,7 +45,10 @@ public class CategoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
+        if (savedInstanceState != null)
+        {
+            ((BaseFile) getApplication()).setCategoryId(null);
+        }
 
 
         Bundle extras = getIntent().getExtras();
@@ -67,10 +69,6 @@ public class CategoryActivity extends AppCompatActivity {
 
             }
         }
-
-
-
-
         initFragment(savedInstanceState);
         //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

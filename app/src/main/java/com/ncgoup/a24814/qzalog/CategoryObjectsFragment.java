@@ -78,6 +78,7 @@ public class CategoryObjectsFragment extends Fragment {
         view = inflater.inflate(R.layout.objects_list,
                 container, false);
 
+
         urlRequest = ((BaseFile) getActivity().getApplication()).getUrl();
         objects = ((BaseFile) getActivity().getApplication()).getObjects();
 
