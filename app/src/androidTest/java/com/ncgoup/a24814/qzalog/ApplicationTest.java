@@ -1,4 +1,4 @@
-package com.ncgroup.a24814.qzalog;
+package com.ncgoup.a24814.qzalog;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

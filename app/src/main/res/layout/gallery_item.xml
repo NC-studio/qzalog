@@ -12,7 +12,6 @@
     <ImageView
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:src="@drawable/test"
         android:id="@+id/objectImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

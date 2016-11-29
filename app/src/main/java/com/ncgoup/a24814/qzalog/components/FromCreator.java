@@ -2,6 +2,7 @@ package com.ncgoup.a24814.qzalog.components;
 
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -132,6 +133,7 @@ public class FromCreator {
         View v1 =  inflater.inflate(R.layout.field_type_2, null);
 
         Spinner spinner = (Spinner) v1.findViewById(R.id.spinnerForm);
+        spinner.getBackground().setColorFilter(context.getResources().getColor(R.color.appBlue), PorterDuff.Mode.SRC_ATOP);
 
         /**
          * The values of this spinner

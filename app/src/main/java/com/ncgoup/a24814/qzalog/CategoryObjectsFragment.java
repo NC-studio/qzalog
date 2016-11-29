@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.ncgoup.a24814.qzalog.components.Backend;
 import com.ncgoup.a24814.qzalog.components.BackendCallback;
 import com.ncgoup.a24814.qzalog.components.BaseFile;
@@ -70,6 +69,8 @@ public class CategoryObjectsFragment extends Fragment {
 
     private LayoutInflater factory;
 
+    private String sortString = "";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,6 +97,8 @@ public class CategoryObjectsFragment extends Fragment {
     @Override
     public void onPause() {
         if(backendAsync != null){
+            isLoading = false;
+            isUploaded = false;
             backendAsync.cancel(true);
         }
         super.onPause();
@@ -127,7 +130,8 @@ public class CategoryObjectsFragment extends Fragment {
                     filterDate.setBackgroundResource(R.drawable.border_filter_left_active);
                     filterPriceUp.setBackgroundResource(R.drawable.border_filter_center);
                     filterPriceDown.setBackgroundResource(R.drawable.border_filter_right);
-                    sortRequest("");
+                    sortString = "";
+                    sortRequest(sortString);
                 }
             }
         });
@@ -143,7 +147,8 @@ public class CategoryObjectsFragment extends Fragment {
                     filterDate.setBackgroundResource(R.drawable.border_filter_left);
                     filterPriceUp.setBackgroundResource(R.drawable.border_filter_center_active);
                     filterPriceDown.setBackgroundResource(R.drawable.border_filter_right);
-                    sortRequest("&sort=cost_out");
+                    sortString  = "&sort=cost_out";
+                    sortRequest(sortString);
                 }
             }
         });
@@ -159,7 +164,8 @@ public class CategoryObjectsFragment extends Fragment {
                     filterDate.setBackgroundResource(R.drawable.border_filter_left);
                     filterPriceUp.setBackgroundResource(R.drawable.border_filter_center);
                     filterPriceDown.setBackgroundResource(R.drawable.border_filter_right_active);
-                    sortRequest("&sort=-cost_out");
+                    sortString  = "&sort=-cost_out";
+                    sortRequest(sortString);
                 }
             }
         });
@@ -167,10 +173,12 @@ public class CategoryObjectsFragment extends Fragment {
     }
 
     private void sortRequest(String sortString){
+        objNumber = 0;
         if(isLoading == true){
             backendAsync.cancel(true);
         }
         objects = new ArrayList<Objects>();
+        ((BaseFile) getActivity().getApplication()).setObjects(objects);
         adapter.clear();
         adapter = new ObjectAdapter(getActivity(), R.layout.objects_list_item, objects);
         objectsList.setAdapter(adapter);
@@ -202,6 +210,8 @@ public class CategoryObjectsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, final View arg1, int arg2,
                                     long arg3) {
+                isLoading = false;
+                isUploaded = false;
                 backendAsync.cancel(true);
                 Objects obj = objects.get(arg2);
                 Intent intent = new Intent(getActivity(), ObjectDetailActivity.class);
@@ -211,7 +221,8 @@ public class CategoryObjectsFragment extends Fragment {
             }
         });
         isLoading = true;
-        backendAsync =  Backend.getObjects(getActivity(), fragment, urlRequest, page);
+
+        backendAsync =  Backend.getObjects(getActivity(), fragment, urlRequest + sortString, page);
         backendAsync.execute();
 
     }
@@ -238,12 +249,13 @@ public class CategoryObjectsFragment extends Fragment {
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                              int totalItemCount) {
             int lastInScreen = firstVisibleItem + visibleItemCount;
+
             if (lastInScreen == totalItemCount) {
                 if(isUploaded == false && isLoading==false) {
                     isLoading = true;
                     loadingFooter.setVisibility(View.VISIBLE);
 
-                    backendAsync = Backend.getObjects(getActivity(), fragment, urlRequest, page);
+                    backendAsync = Backend.getObjects(getActivity(), fragment, urlRequest + sortString, page);
                     backendAsync.execute();
                 }
             }
@@ -348,6 +360,7 @@ public class CategoryObjectsFragment extends Fragment {
     }
 
     public void backendResponse(List<Objects> clones){
+
         page = page + 1;
         loadingFooter.setVisibility(View.GONE);
 
@@ -373,8 +386,6 @@ public class CategoryObjectsFragment extends Fragment {
         }
 
         isLoading = false;
-        //List<Objects> objects1 = ((BaseFile) getActivity().getApplication()).getObjects();
-       // objects =  ((BaseFile) getActivity().getApplication()).getObjects();
     }
 
 
