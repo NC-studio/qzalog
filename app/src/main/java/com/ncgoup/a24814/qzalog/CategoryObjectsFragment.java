@@ -74,7 +74,6 @@ public class CategoryObjectsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         fragment = this;
         view = inflater.inflate(R.layout.objects_list,
                 container, false);
@@ -92,6 +91,15 @@ public class CategoryObjectsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(urlRequest == null){
+            getActivity().finish();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
     }
 
     @Override

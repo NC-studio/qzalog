@@ -108,11 +108,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onResume() {
-        super.onResume();  // Always call the superclass method first
+        super.onResume();
         n.getMenu().getItem(0).setChecked(true);
-
     }
-
 
 
 

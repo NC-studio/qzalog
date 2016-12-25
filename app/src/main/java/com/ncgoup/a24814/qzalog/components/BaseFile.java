@@ -18,7 +18,7 @@ public class BaseFile extends Application {
 
     private Boolean mapInited = false;
 
-    private String urlRequest = Defaults.CATEGORY_PATH;
+    private String urlRequest = null;
 
     private Integer categoryId;
 

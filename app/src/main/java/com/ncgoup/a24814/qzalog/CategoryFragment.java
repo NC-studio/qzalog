@@ -48,10 +48,10 @@ public class CategoryFragment extends Fragment {
                 container, false);
         initView();
 
-        if (savedInstanceState != null)
-        {
+        //if (savedInstanceState != null)
+       // {
             //Log.v("Main", savedInstanceState.getString("loaded"));
-        }
+        //}
         initView();
         initAdapter();
 

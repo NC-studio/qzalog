@@ -9,13 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-
-import com.ncgoup.a24814.qzalog.components.Backend;
-import com.ncgoup.a24814.qzalog.components.BackendCallback;
-import com.ncgoup.a24814.qzalog.components.BaseFile;
-import com.ncgoup.a24814.qzalog.models.MapObject;
-import com.ncgoup.a24814.qzalog.models.MapProperty;
-import com.ncgoup.a24814.qzalog.models.Objects;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +21,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.ncgoup.a24814.qzalog.components.Backend;
+import com.ncgoup.a24814.qzalog.components.BackendCallback;
+import com.ncgoup.a24814.qzalog.components.BaseFile;
+import com.ncgoup.a24814.qzalog.models.MapObject;
+import com.ncgoup.a24814.qzalog.models.MapProperty;
+import com.ncgoup.a24814.qzalog.models.Objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,20 +73,19 @@ public class MapFragment extends Fragment {
                 backendAsync.execute();
             } else {
                 object = ((BaseFile) getActivity().getApplication()).getObjectModel();
+
                 mMapView.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap mMap) {
                         googleMap = mMap;
-
                         UiSettings settings = googleMap.getUiSettings();
                         settings.setZoomControlsEnabled(true);
                         settings.setZoomGesturesEnabled(true);
-
                         LatLng location = new LatLng(Double.valueOf(object.getCoordX()), Double.valueOf(object.getCoordY()));
                         googleMap.addMarker(new MarkerOptions().position(location));
-
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(location).zoom(Integer.valueOf(object.getZoom())).build();
                         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
                     }
                 });
             }

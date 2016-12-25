@@ -43,6 +43,10 @@ public class MapActivity extends AppCompatActivity {
             categoryPosition = extras.getInt("category");
             if(categoryPosition != null) {
                 List<Category> categories = ((BaseFile) getApplication()).getCategories();
+                if(categories.size() == 0){
+                    finish();
+                    return;
+                }
                 category = categories.get(categoryPosition);
                 ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
                 urlRequest = ((BaseFile) getApplication()).getUrl() + "&map=1";
@@ -65,6 +69,13 @@ public class MapActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
 
     private void initFragment(Bundle savedInstanceState){
         if (savedInstanceState == null) {

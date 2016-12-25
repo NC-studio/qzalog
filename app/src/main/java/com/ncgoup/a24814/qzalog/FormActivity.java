@@ -53,6 +53,10 @@ public class FormActivity extends AppCompatActivity {
             categoryChanged = extras.getBoolean("categoryChanged");
 
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
+            if(categories.size() == 0){
+                finish();
+                return;
+            }
             category = categories.get(categoryPosition);
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
 

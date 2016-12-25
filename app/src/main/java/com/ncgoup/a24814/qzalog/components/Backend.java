@@ -37,34 +37,41 @@ public class Backend {
             {
                 setValue(true);
                 HashMap<String, Category> categoriesList = new HashMap<>();
-                String jsonResponse = Helpers.getStringByUrl("http://qzalog.kz/_mobile_category");
-                if(jsonResponse != null){
-                    try {
-                        JSONObject jsonObj = new JSONObject(jsonResponse);
-                        // Getting JSON Array node
-                        JSONArray categories = jsonObj.getJSONArray("categories");
-                        for (int i = 0; i < categories.length(); i++) {
-                            JSONObject c = categories.getJSONObject(i);
-                            String id = c.getString("id");
-                            String amount = c.getString("amount");
-                            String title = c.getString("title");
+                try {
+                    if(Helpers.isNetworkStatusAvialable(context)) {
+                        String jsonResponse = Helpers.getStringByUrl("http://qzalog.kz/_mobile_category");
+                        if (jsonResponse != null) {
+                            try {
+                                JSONObject jsonObj = new JSONObject(jsonResponse);
+                                // Getting JSON Array node
+                                JSONArray categories = jsonObj.getJSONArray("categories");
+                                for (int i = 0; i < categories.length(); i++) {
+                                    JSONObject c = categories.getJSONObject(i);
+                                    String id = c.getString("id");
+                                    String amount = c.getString("amount");
+                                    String title = c.getString("title");
 
-                            Category category =  new Category(title, Integer.valueOf(amount), Integer.valueOf(id));
-                            categoriesList.put(id, category);
-                        }
-                    } catch (final JSONException e) {
-                        setValue(false);
-                        Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
-                    }
+                                    Category category = new Category(title, Integer.valueOf(amount), Integer.valueOf(id));
+                                    categoriesList.put(id, category);
+                                }
+                            } catch (final JSONException e) {
+                                setValue(false);
+                                Log.e("BACKEND TEST", "Json parsing error: " + e.getMessage());
+                            }
 
-                    List<Category> categoriesApp =  ((BaseFile) activity.getApplication()).getCategories();
-                    for (Category object: categoriesApp) {
-                        Category categoryApp = categoriesList.get(String.valueOf(object.getObjectId()));
-                        if(categoryApp != null){
-                            object.setObjAmount(Integer.valueOf(categoryApp.getObjAmount()));
+                            List<Category> categoriesApp = ((BaseFile) activity.getApplication()).getCategories();
+                            for (Category object : categoriesApp) {
+                                Category categoryApp = categoriesList.get(String.valueOf(object.getObjectId()));
+                                if (categoryApp != null) {
+                                    object.setObjAmount(Integer.valueOf(categoryApp.getObjAmount()));
+                                }
+                            }
                         }
                     }
+                }catch(Exception e){
+
                 }
+
                 return null;
             }
             @Override

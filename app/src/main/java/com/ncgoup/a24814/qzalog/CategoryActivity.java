@@ -55,6 +55,10 @@ public class CategoryActivity extends AppCompatActivity {
         if(extras != null){
             categoryPosition = extras.getInt("category");
             List<Category> categories = ((BaseFile) getApplication()).getCategories();
+            if(categories.size() == 0){
+                finish();
+                return;
+            }
             category = categories.get(extras.getInt("category"));
             ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(category.getName());
 
